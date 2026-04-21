@@ -43,7 +43,7 @@ $displayed  = $filterCat === 'all' ? $attractions
       <div class="muni-profile-avatar"><?= strtoupper(substr($muniName,0,1)) ?></div>
       <div class="muni-profile-text">
         <h1><?= htmlspecialchars($muniName) ?></h1>
-        <p>📍 Rizal Province &nbsp;·&nbsp;
+        <p> Rizal Province &nbsp;·&nbsp;
           <?= $avgRating ? '⭐ '.$avgRating.'/5' : 'No ratings yet' ?>
           &nbsp;·&nbsp; <?= count($attractions) ?> Attractions</p>
         <div style="display:flex;gap:8px;margin-top:8px;flex-wrap:wrap;">

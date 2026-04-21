@@ -84,7 +84,7 @@ usort($filteredMunis, fn($a,$b) => $sortBy === 'satisfaction'
     <?php if(($user['role']??'')==='admin'): ?>
       <a href="admin_dashboard.php" class="btn-primary"
          style="display:inline-block;width:auto;margin-top:16px;padding:10px 24px;">
-        📊 Go to Admin Dashboard
+         Go to Admin Dashboard
       </a>
     <?php endif; ?>
   </section>
@@ -115,7 +115,7 @@ usort($filteredMunis, fn($a,$b) => $sortBy === 'satisfaction'
 
     <?php if(empty($filteredMunis)): ?>
       <div style="text-align:center;padding:60px 20px;color:var(--text-muted);">
-        <div style="font-size:3rem;">😕</div>
+        <div style="font-size:3rem;"></div>
         <h3 style="margin:12px 0 8px;">No results found</h3>
         <p>Try a different keyword or category.</p>
         <a href="index.php" class="btn-primary" style="width:auto;display:inline-block;margin-top:16px;padding:10px 24px;">Clear Search</a>
@@ -146,9 +146,9 @@ usort($filteredMunis, fn($a,$b) => $sortBy === 'satisfaction'
                 <span style="color:var(--text-muted);font-size:.8rem;">No ratings yet</span>
               <?php endif; ?>
               <?php if($mData['satisfaction']): ?>
-                <span>😊 Satisfaction: <?= $mData['satisfaction'] ?>%</span>
+                <span> Satisfaction: <?= $mData['satisfaction'] ?>%</span>
               <?php endif; ?>
-              <span>🔥 Popularity: <?= $mData['popularity'] ?>%</span>
+              <span> Popularity: <?= $mData['popularity'] ?>%</span>
             </div>
             <div class="moc-tags">
               <?php foreach(array_slice($mData['tags'],0,4) as $tag): ?>
@@ -163,7 +163,7 @@ usort($filteredMunis, fn($a,$b) => $sortBy === 'satisfaction'
 
   <section style="margin-bottom:36px;">
     <div class="section-header">
-      <h2>🔥 Popular Right Now</h2>
+      <h2> Popular Right Now</h2>
       <a href="popular.php">See all →</a>
     </div>
     <?php if(empty($popular)): ?>
@@ -180,7 +180,7 @@ usort($filteredMunis, fn($a,$b) => $sortBy === 'satisfaction'
             <span class="category-badge category-<?= $a['category'] ?>"><?= ucfirst($a['category']) ?></span>
             <h3><?= htmlspecialchars($a['name']) ?></h3>
             <div class="rating">⭐ <?= $rating ?>/5</div>
-            <span class="location">📍 <?= htmlspecialchars($a['municipality']) ?></span>
+            <span class="location"> <?= htmlspecialchars($a['municipality']) ?></span>
             <a href="details.php?id=<?= $a['id'] ?>" class="btn-primary btn-sm">View Details</a>
           </div>
         </div>
@@ -191,7 +191,7 @@ usort($filteredMunis, fn($a,$b) => $sortBy === 'satisfaction'
 
   <section>
     <div class="section-header">
-      <h2>⭐ Recommended for You</h2>
+      <h2> Recommended for You</h2>
       <a href="recommended.php">See all →</a>
     </div>
     <?php if(empty($recommendations)): ?>
@@ -210,7 +210,7 @@ usort($filteredMunis, fn($a,$b) => $sortBy === 'satisfaction'
               <div class="rating">
                 <?= $rating ? '⭐ '.$rating.'/5' : '<span style="color:var(--text-muted);font-size:.82rem;">No ratings yet</span>' ?>
               </div>
-              <span class="location">📍 <?= htmlspecialchars($a['municipality']) ?></span>
+              <span class="location"> <?= htmlspecialchars($a['municipality']) ?></span>
               <a href="details.php?id=<?= $a['id'] ?>" class="btn-primary btn-sm">View Details</a>
             </div>
           </div>

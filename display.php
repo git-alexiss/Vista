@@ -51,7 +51,7 @@ $user = $_SESSION['pending_user'];
     <!-- Security notice -->
     <div style="background:var(--green-pale);border-radius:10px;padding:12px 16px;
                 margin-bottom:20px;font-size:.83rem;color:var(--green);border-left:4px solid var(--green);">
-      🔒 Your password will be securely hashed using <strong>bcrypt</strong> before being stored in the database.
+      Your password will be securely hashed using <strong>bcrypt</strong> before being stored in the database.
       It is never saved in plain text.
     </div>
 
@@ -78,7 +78,7 @@ $user = $_SESSION['pending_user'];
       <form method="POST" style="flex:1;">
         <input type="hidden" name="csrf"   value="<?= $csrf ?>">
         <input type="hidden" name="action" value="confirm_register">
-        <button type="submit" class="login-btn">✅ Confirm &amp; Register</button>
+        <button type="submit" class="login-btn"> Confirm &amp; Register</button>
       </form>
     </div>
   </div>

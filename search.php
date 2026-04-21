@@ -46,7 +46,7 @@ if ($catFilter && $catFilter!=='all') {
 
     <?php if(empty($results)): ?>
       <div style="text-align:center;padding:60px 20px;color:var(--text-muted);">
-        <div style="font-size:3rem">😕</div>
+        <div style="font-size:3rem"></div>
         <h3 style="margin:12px 0 8px;">No results found</h3>
         <p>Try a different keyword or browse our <a href="attractions.php">full attractions list</a>.</p>
       </div>
@@ -58,9 +58,9 @@ if ($catFilter && $catFilter!=='all') {
             <div class="card-content">
               <span class="category-badge category-<?= $a['category'] ?>"><?= ucfirst($a['category']) ?></span>
               <h3><?= htmlspecialchars($a['name']) ?></h3>
-              <div class="rating">⭐ <?= $a['rating'] ?>/5</div>
-              <span class="location">📍 <?= htmlspecialchars($a['municipality']) ?></span>
-              <span class="hours">🕐 <?= htmlspecialchars($a['hours']) ?></span>
+              <div class="rating"> <?= $a['rating'] ?>/5</div>
+              <span class="location"> <?= htmlspecialchars($a['municipality']) ?></span>
+              <span class="hours"> <?= htmlspecialchars($a['hours']) ?></span>
               <a href="details.php?id=<?= $a['id'] ?>" class="btn-primary btn-sm">View Details</a>
             </div>
           </div>

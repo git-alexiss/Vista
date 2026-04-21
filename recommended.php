@@ -20,7 +20,7 @@ $recommended = getRecommendations($_SESSION['recently_viewed']??[]);
   </div>
   <?php if(empty($recommended)): ?>
     <div style="text-align:center;padding:60px 20px;color:var(--text-muted);">
-      <div style="font-size:3rem">🎉</div>
+      <div style="font-size:3rem"></div>
       <h3 style="margin:12px 0 8px;">You've seen it all!</h3>
       <p>Browse our <a href="attractions.php">complete list</a> to revisit your favorites.</p>
     </div>
@@ -37,7 +37,7 @@ $recommended = getRecommendations($_SESSION['recently_viewed']??[]);
             <div class="rating">
               <?= $rating ? '⭐ '.$rating.'/5' : '<span style="color:var(--text-muted);font-size:.82rem;">No ratings yet</span>' ?>
             </div>
-            <span class="location">📍 <?= htmlspecialchars($a['municipality']) ?></span>
+            <span class="location"> <?= htmlspecialchars($a['municipality']) ?></span>
             <p style="font-size:.82rem;color:var(--text-muted);margin-top:4px;"><?= htmlspecialchars($a['fact']) ?></p>
             <a href="details.php?id=<?= $a['id'] ?>" class="btn-primary btn-sm">View Details</a>
           </div>

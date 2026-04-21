@@ -69,7 +69,7 @@ $avgRating = getAttractionRating($id);
     <div class="detail-hero-overlay">
       <span class="category-badge category-<?= $a['category'] ?>"><?= ucfirst($a['category']) ?></span>
       <h1><?= htmlspecialchars($a['name']) ?></h1>
-      <p>📍 <?= htmlspecialchars($a['municipality']) ?>, Rizal</p>
+      <p> <?= htmlspecialchars($a['municipality']) ?>, Rizal</p>
     </div>
   </div>
 
@@ -87,15 +87,15 @@ $avgRating = getAttractionRating($id);
     </div>
     <div class="meta-item">
       <div class="meta-label">Reviews</div>
-      <div class="meta-value">💬 <?= count($reviews) ?></div>
+      <div class="meta-value"><?= count($reviews) ?></div>
     </div>
     <div class="meta-item">
       <div class="meta-label">Category</div>
-      <div class="meta-value"><?= ucfirst($a['category']) ?></div>
+      <div class="meta-value"> <?= ucfirst($a['category']) ?></div>
     </div>
     <div class="meta-item">
       <div class="meta-label">Municipality</div>
-      <div class="meta-value">📍 <?= htmlspecialchars($a['municipality']) ?></div>
+      <div class="meta-value"> <?= htmlspecialchars($a['municipality']) ?></div>
     </div>
     <div class="meta-item">
       <div class="meta-label">Entry Fee</div>
@@ -166,7 +166,7 @@ $avgRating = getAttractionRating($id);
     </div>
   <?php else: ?>
     <div style="text-align:center;padding:30px 20px;color:var(--text-muted);">
-      <div style="font-size:2.5rem;">💬</div>
+      <div style="font-size:2.5rem;"></div>
       <p style="margin-top:8px;">No reviews yet. Be the first to share your experience!</p>
     </div>
   <?php endif; ?>

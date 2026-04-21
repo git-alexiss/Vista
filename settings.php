@@ -71,9 +71,9 @@ $s   = $_SESSION['settings'] ?? [];
 $tab = $_GET['tab'] ?? 'preferences';
 // Only valid tabs (no sandbox)
 $tabs = [
-    'preferences' => '⚙️ Preferences',
-    'security'    => '🔒 Security',
-    'privacy'     => '🛡️ Privacy',
+    'preferences' => ' Preferences',
+    'security'    => ' Security',
+    'privacy'     => ' Privacy',
 ];
 if (!array_key_exists($tab, $tabs)) $tab = 'preferences';
 
@@ -89,14 +89,14 @@ $isDark = !empty($s['dark_mode']);
 <body>
 <?= renderNav('') ?>
 <main class="container">
-  <h1 style="font-size:1.6rem;margin-bottom:20px;">⚙️ Settings</h1>
+  <h1 style="font-size:1.6rem;margin-bottom:20px;"> Settings</h1>
 
   <?php if($msg): ?>
     <?php [$type,$text] = explode(':',$msg,2); ?>
     <div class="notification <?= $type ?> fade-in"><?= htmlspecialchars($text) ?></div>
   <?php endif; ?>
   <?php if(isset($_GET['saved'])): ?>
-    <div class="notification success fade-in">✅ Settings saved successfully!</div>
+    <div class="notification success fade-in"> Settings saved successfully!</div>
   <?php endif; ?>
 
   <div class="settings-grid">
@@ -176,7 +176,7 @@ $isDark = !empty($s['dark_mode']);
           </div>
 
           <button type="submit" class="btn-primary" style="width:auto;padding:10px 28px;margin-top:8px;">
-            💾 Save Preferences
+             Save Preferences
           </button>
         </form>
 
@@ -185,12 +185,12 @@ $isDark = !empty($s['dark_mode']);
 
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:24px;">
           <?php foreach([
-            ['🔒 CSRF Protection',      'Active',                    true],
-            ['🛡️ Brute-Force Lockout', 'Active (5 attempts)',        true],
-            ['📲 Two-Factor Auth (OTP)','Active on every login',      true],
-            ['⏱ Session Timeout',       '30 minutes of inactivity',  true],
-            ['🔐 Password Hashing',     'bcrypt, cost 12',            true],
-            ['📋 Activity Logging',     'Session-based',              true],
+            [' CSRF Protection',      'Active',                    true],
+            [' Brute-Force Lockout', 'Active (5 attempts)',        true],
+            [' Two-Factor Auth (OTP)','Active on every login',      true],
+            ['Session Timeout',       '30 minutes of inactivity',  true],
+            [' Password Hashing',     'bcrypt, cost 12',            true],
+            [' Activity Logging',     'Session-based',              true],
           ] as [$label,$status,$ok]): ?>
             <div style="background:var(--bg);border-radius:10px;padding:14px;border-left:4px solid <?= $ok?'var(--green)':'var(--gold-dark)' ?>;">
               <div style="font-weight:700;font-size:.88rem;"><?= $label ?></div>
@@ -225,7 +225,7 @@ $isDark = !empty($s['dark_mode']);
           </p>
           <a href="logout.php" class="btn-primary btn-sm"
              style="display:inline-block;width:auto;margin-top:10px;padding:8px 20px;background:var(--red,#e53e3e);text-decoration:none;">
-            🚪 Sign Out
+             Sign Out
           </a>
         </div>
 
@@ -258,7 +258,7 @@ $isDark = !empty($s['dark_mode']);
           </div>
 
           <button type="submit" class="btn-primary" style="width:auto;padding:10px 28px;margin-top:8px;">
-            💾 Save Privacy Settings
+             Save Privacy Settings
           </button>
         </form>
 

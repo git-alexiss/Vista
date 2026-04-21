@@ -112,7 +112,7 @@ $muniAttractions = ($selectedMuni && isset($municipalities[$selectedMuni]))
   <!-- Municipalities -->
   <div class="table-card" style="margin-bottom:24px;">
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px;flex-wrap:wrap;gap:8px;">
-      <h3>📍 Municipalities</h3>
+      <h3> Municipalities</h3>
       <small style="color:var(--text-muted);">Click a card to view its attractions</small>
     </div>
     <div class="muni-grid">
@@ -147,7 +147,7 @@ $muniAttractions = ($selectedMuni && isset($municipalities[$selectedMuni]))
   <?php if($selectedMuni && !empty($muniAttractions)): ?>
   <div class="muni-panel" id="muni-panel">
     <div class="muni-panel-header">
-      <h3>📍 <?= htmlspecialchars($selectedMuni) ?> — <?= count($muniAttractions) ?> Attraction(s)</h3>
+      <h3> <?= htmlspecialchars($selectedMuni) ?> — <?= count($muniAttractions) ?> Attraction(s)</h3>
       <a href="admin_dashboard.php" class="close-panel">✕ Close</a>
     </div>
     <div class="cards-grid">
@@ -170,7 +170,7 @@ $muniAttractions = ($selectedMuni && isset($municipalities[$selectedMuni]))
   <!-- Top rated + Sentiment -->
   <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:24px;" class="dashboard-two-col">
     <div class="table-card">
-      <h3>🏆 Top Rated Attractions</h3>
+      <h3>Top Rated Attractions</h3>
       <div class="bar-chart">
         <?php foreach($top as $a): ?>
           <div class="bar-row">
@@ -203,7 +203,7 @@ $muniAttractions = ($selectedMuni && isset($municipalities[$selectedMuni]))
   <!-- Reviews table -->
   <?php if($reviews): ?>
   <div class="table-card" style="margin-bottom:24px;">
-    <h3>🗣 All Reviews</h3>
+    <h3>All Reviews</h3>
     <table>
       <thead><tr><th>Attraction</th><th>User</th><th>Rating</th><th>Sentiment</th><th>Comment</th><th>Date</th></tr></thead>
       <tbody>

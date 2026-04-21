@@ -37,7 +37,7 @@ $user = $_SESSION['user'];
     <?php endforeach; ?>
 
     <div style="margin-top:20px;display:flex;gap:12px;flex-wrap:wrap;">
-      <a href="settings.php" class="btn-secondary">⚙️ Settings</a>
+      <a href="settings.php" class="btn-secondary"> Settings</a>
       <a href="logout.php" class="btn-primary" style="background:var(--red);width:auto;padding:10px 20px;">🚪 Sign Out</a>
     </div>
   </div>

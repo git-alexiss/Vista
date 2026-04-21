@@ -67,7 +67,7 @@ $maxCat   = max(array_values($catCount)?:[1]);
 
   <!-- ── Rating leaderboard ── -->
   <div class="report-section">
-    <h3>🏆 Attraction Satisfaction Leaderboard</h3>
+    <h3> Attraction Satisfaction Leaderboard</h3>
     <div class="bar-chart">
       <?php foreach($byRating as $a):
         $liveRating  = getAttractionRating($a['id']);
@@ -165,7 +165,7 @@ $maxCat   = max(array_values($catCount)?:[1]);
 
   <!-- ── Municipality report ── -->
   <div class="report-section">
-    <h3>📍 Attractions by Municipality</h3>
+    <h3> Attractions by Municipality</h3>
     <div class="bar-chart">
       <?php $maxMuni=max(array_values($muniCount)?:[1]); foreach($muniCount as $muni=>$count): ?>
         <div class="bar-row">

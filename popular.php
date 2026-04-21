@@ -15,12 +15,12 @@ $popular = getPopularAttractions();
 <?= renderNav('popular') ?>
 <main class="container">
   <div class="hero-section fade-in">
-    <h1>🔥 Popular Attractions</h1>
+    <h1> Popular Attractions</h1>
     <p>Top-rated destinations in Rizal Province</p>
   </div>
   <?php if(empty($popular)): ?>
     <div style="text-align:center;padding:60px 20px;color:var(--text-muted);">
-      <div style="font-size:3rem">📭</div>
+      <div style="font-size:3rem"></div>
       <h3 style="margin:12px 0 8px;">No ratings yet</h3>
       <p>Be the first to review an attraction!</p>
       <a href="attractions.php" class="btn-primary" style="width:auto;display:inline-block;margin-top:16px;padding:10px 24px;">Browse Attractions</a>
@@ -39,7 +39,7 @@ $popular = getPopularAttractions();
           <span class="category-badge category-<?= $a['category'] ?>"><?= ucfirst($a['category']) ?></span>
           <h3><?= htmlspecialchars($a['name']) ?></h3>
           <div class="rating">⭐ <?= $rating ?>/5</div>
-          <span class="location">📍 <?= htmlspecialchars($a['municipality']) ?></span>
+          <span class="location"> <?= htmlspecialchars($a['municipality']) ?></span>
           <p style="font-size:.82rem;color:var(--text-muted);margin-top:4px;"><?= htmlspecialchars($a['fact']) ?></p>
           <a href="details.php?id=<?= $a['id'] ?>" class="btn-primary btn-sm">View Details</a>
         </div>

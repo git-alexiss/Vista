@@ -23,7 +23,7 @@ $list = ($cat==='all') ? $all : array_values(array_filter($all,fn($a)=>$a['categ
   </div>
 
   <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:20px;">
-    <?php foreach(['all'=>'🌐 All','nature'=>'🌿 Nature','cultural'=>'🏛 Cultural','adventure'=>'⛰ Adventure'] as $val=>$label): ?>
+    <?php foreach(['all'=>'All','nature'=>'🌿 Nature','cultural'=>'🏛 Cultural','adventure'=>'⛰ Adventure'] as $val=>$label): ?>
       <a href="attractions.php?cat=<?= $val ?>"
          style="padding:8px 18px;border-radius:20px;font-weight:600;font-size:.85rem;
                 background:<?= $cat===$val?'var(--green)':'var(--green-pale)' ?>;
@@ -52,7 +52,7 @@ $list = ($cat==='all') ? $all : array_values(array_filter($all,fn($a)=>$a['categ
           <div class="rating">
             <?= $rating ? '⭐ '.$rating.'/5' : '<span style="color:var(--text-muted);font-size:.82rem;">No ratings yet</span>' ?>
           </div>
-          <span class="location">📍 <?= htmlspecialchars($a['municipality']) ?></span>
+          <span class="location"><?= htmlspecialchars($a['municipality']) ?></span>
           <span style="font-size:.82rem;font-weight:600;color:var(--green);"><?= htmlspecialchars($a['price']) ?></span>
 
 

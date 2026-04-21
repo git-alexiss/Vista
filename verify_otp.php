@@ -118,7 +118,7 @@ $expiresIn = isset($_SESSION['otp']['expires']) ? max(0, $_SESSION['otp']['expir
 <div class="otp-container">
   <div class="otp-card">
     <div class="otp-logo">VISTA<span>Rizal</span></div>
-    <div class="otp-icon">📧</div>
+    <div class="otp-icon"></div>
     <h2>Two-Factor Verification</h2>
     <p class="subtitle">
       We've sent a 6-digit code to<br>
@@ -127,7 +127,7 @@ $expiresIn = isset($_SESSION['otp']['expires']) ? max(0, $_SESSION['otp']['expir
     </p>
 
     <?php if(!empty($_SESSION['otp_send_error'])): ?>
-      <div class="send-error">⚠️ Email could not be sent. Use the demo code below instead.</div>
+      <div class="send-error"> Email could not be sent. Use the demo code below instead.</div>
     <?php endif; ?>
 
     <?php if(isset($_SESSION['demo_otp'])): ?>
@@ -139,7 +139,7 @@ $expiresIn = isset($_SESSION['otp']['expires']) ? max(0, $_SESSION['otp']['expir
     <?php endif; ?>
 
     <?php if($error): ?><div class="otp-error"><?= $error ?></div><?php endif; ?>
-    <?php if($success): ?><div class="otp-success">✅ <?= htmlspecialchars($success) ?></div><?php endif; ?>
+    <?php if($success): ?><div class="otp-success"> <?= htmlspecialchars($success) ?></div><?php endif; ?>
 
     <form method="POST" id="otpForm">
       <input type="hidden" name="csrf"   value="<?= $csrf ?>">
@@ -151,7 +151,7 @@ $expiresIn = isset($_SESSION['otp']['expires']) ? max(0, $_SESSION['otp']['expir
         <?php endfor; ?>
       </div>
       <div class="otp-timer">Code expires in <span id="countdown"><?= gmdate('i:s', $expiresIn) ?></span></div>
-      <button type="submit" class="otp-btn" id="verifyBtn">✅ Verify &amp; Sign In</button>
+      <button type="submit" class="otp-btn" id="verifyBtn"> Verify &amp; Sign In</button>
     </form>
 
     <div class="otp-actions">

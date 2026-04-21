@@ -215,6 +215,21 @@ function getPopularAttractions(int $limit = 6): array {
     return $stmt->fetchAll();
 }
 
+/**
+ * Get the average rating for an attraction from the reviews table.
+ * Returns a formatted float (e.g. 4.5) or null if no reviews exist.
+ */
+function getAttractionRating(int $attractionId): ?float {
+    $stmt = getDB()->prepare('
+        SELECT ROUND(AVG(rating), 1) AS avg_rating
+        FROM   reviews
+        WHERE  attraction_id = ?
+    ');
+    $stmt->execute([$attractionId]);
+    $result = $stmt->fetchColumn();
+    return ($result !== null && $result !== false) ? (float) $result : null;
+}
+
 /** Recommended = top-rated excluding already-viewed. */
 function getRecommendations(array $viewedIds = [], int $limit = 6): array {
     if (empty($viewedIds)) return getPopularAttractions($limit);

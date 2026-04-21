@@ -82,7 +82,7 @@ usort($filteredMunis, fn($a,$b) => $sortBy === 'satisfaction'
     <h1>Welcome back, <?= htmlspecialchars($user['name']??'Traveler') ?>! 👋</h1>
     <p>Discover the best of Rizal Province — <?= count($all) ?> attractions across <?= count($municipalities) ?> municipalities.</p>
     <?php if(($user['role']??'')==='admin'): ?>
-      <a href="admin_dashboard.php" clss="btn-primary"
+      <a href="admin_dashboard.php" class="btn-primary"
          style="display:inline-block;width:auto;margin-top:16px;padding:10px 24px;">
         📊 Go to Admin Dashboard
       </a>

@@ -12,7 +12,7 @@
 
 // ─── BREVO CONFIG ──────────────────────────────────────────────────────────────
 // !! IMPORTANT: Replace with your NEW key after rotating the exposed one !!
-define('BREVO_API_KEY', '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');
+define('BREVO_API_KEY', 'xsmtpsib-33b471338be78c99d87825911f2ae5e849f1049829348e9d89c060295fa93df7-5WN4O6jeWCDTm0mb');
 
 // The "From" address must be a verified sender in your Brevo account
 define('BREVO_FROM_EMAIL', 'alexisojascastro95@gmail.com');

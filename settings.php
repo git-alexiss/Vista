@@ -15,10 +15,13 @@ if ($_SERVER['REQUEST_METHOD']==='POST' && ($_POST['action']??'')==='save_settin
             'email_alerts'    => isset($_POST['email_alerts']),
             'show_recent'     => isset($_POST['show_recent']),
             'dark_mode'       => isset($_POST['dark_mode']),
-            'language'        => in_array($_POST['language']??'',['en','fil']) ? $_POST['language'] : 'en',
-            'category_filter' => in_array($_POST['category_filter']??'',['all','nature','cultural','adventure']) ? $_POST['category_filter'] : 'all',
+            'category_filter' => in_array($_POST['category_filter']??'',['all','nature','cultural','adventure'])
+                                    ? $_POST['category_filter'] : 'all',
         ]);
-        $msg='success:Preferences saved!';
+        // If submitted from modal, redirect back with flag to reopen it
+        $back = !empty($_POST['_modal']) ? '?settings_saved=1' : '?tab=preferences&saved=1';
+        $_SESSION['notification'] = 'Preferences saved!';
+        header('Location: index.php'.$back); exit;
     }
 }
 
@@ -29,7 +32,9 @@ if ($_SERVER['REQUEST_METHOD']==='POST' && ($_POST['action']??'')==='save_privac
         $_SESSION['settings'] = array_merge($_SESSION['settings']??[], [
             'share_history' => isset($_POST['share_history']),
         ]);
-        $msg='success:Privacy settings saved!';
+        $back = !empty($_POST['_modal']) ? '?settings_saved=1' : '?tab=privacy&saved=1';
+        $_SESSION['notification'] = 'Privacy settings saved!';
+        header('Location: index.php'.$back); exit;
     }
 }
 
@@ -37,48 +42,61 @@ if ($_SERVER['REQUEST_METHOD']==='POST' && ($_POST['action']??'')==='save_privac
 if ($_SERVER['REQUEST_METHOD']==='POST' && ($_POST['action']??'')==='change_password') {
     if (!verifyCSRF($_POST['csrf']??'')) { $msg='error:Invalid request.'; }
     else {
-        $cur = $_POST['current_password']??'';
-        $new = $_POST['new_password']??'';
-        $con = $_POST['confirm_password']??'';
-        $reg = $_SESSION['registered_user']??null;
-        if (!$reg) { $msg='error:Admin accounts cannot change password here.'; }
-        elseif ($reg['password']!==$cur) { $msg='error:Current password is incorrect.'; }
-        elseif (strlen($new)<6)         { $msg='error:New password must be at least 6 characters.'; }
-        elseif ($new!==$con)            { $msg='error:Passwords do not match.'; }
-        else {
-            $_SESSION['registered_user']['password'] = $new;
-            $_SESSION['user']['password'] = $new;
-            $msg='success:Password changed successfully!';
+        $userId = $_SESSION['user']['id'] ?? 0;
+        $cur    = $_POST['current_password'] ?? '';
+        $new    = $_POST['new_password']     ?? '';
+        $con    = $_POST['confirm_password'] ?? '';
+
+        if (($_SESSION['user']['provider']??'local') !== 'local') {
+            $msg = 'error:OAuth accounts cannot change password here.';
+        } elseif (strlen($new) < 6) {
+            $msg = 'error:New password must be at least 6 characters.';
+        } elseif ($new !== $con) {
+            $msg = 'error:Passwords do not match.';
+        } else {
+            $dbUser = getUserById($userId);
+            if (!$dbUser || !password_verify($cur, $dbUser['password_hash'])) {
+                $msg = 'error:Current password is incorrect.';
+            } else {
+                changePassword($userId, $new);
+                $back = !empty($_POST['_modal']) ? '?settings_saved=1' : '?tab=security&saved=1';
+                $_SESSION['notification'] = 'Password changed successfully!';
+                header('Location: index.php'.$back); exit;
+            }
         }
     }
 }
 
 $s   = $_SESSION['settings'] ?? [];
 $tab = $_GET['tab'] ?? 'preferences';
+// Only valid tabs (no sandbox)
 $tabs = [
     'preferences' => '⚙️ Preferences',
     'security'    => '🔒 Security',
     'privacy'     => '🛡️ Privacy',
-    'sandbox'     => '🧪 Sandbox',
 ];
+if (!array_key_exists($tab, $tabs)) $tab = 'preferences';
 
 $isDark = !empty($s['dark_mode']);
 ?>
 <!DOCTYPE html>
-<html lang="<?= ($s['language']??'en')==='fil'?'tl':'en' ?>"<?= darkModeAttr() ?>>
+<html lang="en"<?= darkModeAttr() ?>>
 <head>
   <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
   <title>Settings – VISTA-Rizal</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-<?= renderNav('settings') ?>
+<?= renderNav('') ?>
 <main class="container">
   <h1 style="font-size:1.6rem;margin-bottom:20px;">⚙️ Settings</h1>
 
   <?php if($msg): ?>
     <?php [$type,$text] = explode(':',$msg,2); ?>
     <div class="notification <?= $type ?> fade-in"><?= htmlspecialchars($text) ?></div>
+  <?php endif; ?>
+  <?php if(isset($_GET['saved'])): ?>
+    <div class="notification success fade-in">✅ Settings saved successfully!</div>
   <?php endif; ?>
 
   <div class="settings-grid">
@@ -148,21 +166,13 @@ $isDark = !empty($s['dark_mode']);
           </div>
 
           <div class="input-group" style="margin-top:20px;">
-            <label>Language</label>
-            <select name="language">
-              <option value="en"  <?= ($s['language']??'en')==='en' ?'selected':'' ?>>🇺🇸 English</option>
-              <option value="fil" <?= ($s['language']??'')==='fil'  ?'selected':'' ?>>🇵🇭 Filipino</option>
-            </select>
-          </div>
-
-          <div class="input-group">
             <label>Default Category Filter</label>
             <select name="category_filter">
               <?php foreach(['all'=>'All Categories','nature'=>'🌿 Nature','cultural'=>'🏛 Cultural','adventure'=>'⛰ Adventure'] as $v=>$l): ?>
                 <option value="<?= $v ?>" <?= ($s['category_filter']??'all')===$v?'selected':'' ?>><?= $l ?></option>
               <?php endforeach; ?>
             </select>
-            <small style="color:var(--text-muted);font-size:.78rem;">This will be the default filter on the Explore page.</small>
+            <small style="color:var(--text-muted);font-size:.78rem;">Default filter on the Explore page.</small>
           </div>
 
           <button type="submit" class="btn-primary" style="width:auto;padding:10px 28px;margin-top:8px;">
@@ -175,12 +185,12 @@ $isDark = !empty($s['dark_mode']);
 
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:24px;">
           <?php foreach([
-            ['🔒 CSRF Protection',      'Active',                   true],
-            ['🛡️ Brute-Force Lockout', 'Active (5 attempts)',       true],
-            ['📲 Two-Factor Auth (OTP)','Active on every login',     true],
-            ['⏱ Session Timeout',       '30 minutes of inactivity', true],
-            ['🔐 Password Hashing',     'Demo uses plain text',      false],
-            ['📋 Activity Logging',     'Session-based',             true],
+            ['🔒 CSRF Protection',      'Active',                    true],
+            ['🛡️ Brute-Force Lockout', 'Active (5 attempts)',        true],
+            ['📲 Two-Factor Auth (OTP)','Active on every login',      true],
+            ['⏱ Session Timeout',       '30 minutes of inactivity',  true],
+            ['🔐 Password Hashing',     'bcrypt, cost 12',            true],
+            ['📋 Activity Logging',     'Session-based',              true],
           ] as [$label,$status,$ok]): ?>
             <div style="background:var(--bg);border-radius:10px;padding:14px;border-left:4px solid <?= $ok?'var(--green)':'var(--gold-dark)' ?>;">
               <div style="font-weight:700;font-size:.88rem;"><?= $label ?></div>
@@ -190,26 +200,17 @@ $isDark = !empty($s['dark_mode']);
         </div>
 
         <h3 style="margin-bottom:16px;border-top:1px solid var(--border);padding-top:16px;">Change Password</h3>
-        <?php if(empty($_SESSION['registered_user'])): ?>
+        <?php if(($_SESSION['user']['provider']??'local')!=='local'): ?>
           <div style="background:var(--bg);border-radius:10px;padding:14px;border-left:4px solid var(--gold-dark);margin-bottom:16px;">
-            <p style="font-size:.88rem;color:var(--text-muted);">Admin accounts use system credentials. Password changes must be made in <code>config.php</code>.</p>
+            <p style="font-size:.88rem;color:var(--text-muted);">OAuth accounts cannot change password here.</p>
           </div>
         <?php else: ?>
         <form method="POST">
           <input type="hidden" name="csrf"   value="<?= $csrf ?>">
           <input type="hidden" name="action" value="change_password">
-          <div class="input-group">
-            <label>Current Password</label>
-            <input type="password" name="current_password" required>
-          </div>
-          <div class="input-group">
-            <label>New Password</label>
-            <input type="password" name="new_password" required minlength="6">
-          </div>
-          <div class="input-group">
-            <label>Confirm New Password</label>
-            <input type="password" name="confirm_password" required>
-          </div>
+          <div class="input-group"><label>Current Password</label><input type="password" name="current_password" required></div>
+          <div class="input-group"><label>New Password</label><input type="password" name="new_password" required minlength="6"></div>
+          <div class="input-group"><label>Confirm New Password</label><input type="password" name="confirm_password" required></div>
           <button type="submit" class="btn-primary" style="width:auto;padding:10px 28px;">🔑 Update Password</button>
         </form>
         <?php endif; ?>
@@ -222,10 +223,10 @@ $isDark = !empty($s['dark_mode']);
             Last active: <strong><?= date('Y-m-d H:i', $_SESSION['last_active']??time()) ?></strong><br>
             Auto-logout after: <strong>30 minutes of inactivity</strong>
           </p>
-          <button onclick="showLogoutModal()" class="btn-primary btn-sm"
-            style="display:inline-block;width:auto;margin-top:10px;background:var(--red);border:none;cursor:pointer;">
-            Sign Out
-          </button>
+          <a href="logout.php" class="btn-primary btn-sm"
+             style="display:inline-block;width:auto;margin-top:10px;padding:8px 20px;background:var(--red,#e53e3e);text-decoration:none;">
+            🚪 Sign Out
+          </a>
         </div>
 
       <?php elseif($tab==='privacy'): ?>
@@ -273,42 +274,6 @@ $isDark = !empty($s['dark_mode']);
         <p style="margin-top:16px;font-size:.85rem;">
           Read our full <a href="consent.php">Terms &amp; Consent</a>.
         </p>
-
-      <?php elseif($tab==='sandbox'): ?>
-        <div style="display:flex;align-items:center;gap:14px;margin-bottom:20px;">
-          <div style="background:var(--green);border-radius:10px;width:44px;height:44px;display:flex;align-items:center;justify-content:center;font-size:1.4rem;flex-shrink:0;">🧪</div>
-          <div>
-            <h2 style="margin:0;font-size:1.2rem;">Sandbox / Demo Settings</h2>
-          </div>
-        </div>
-
-        <div style="background:var(--bg);border-radius:10px;padding:16px;margin-bottom:20px;border-left:4px solid var(--gold-dark);">
-          <h4 style="margin-bottom:8px;color:var(--gold-dark);">Demo Admin Credentials</h4>
-          <p style="font-size:.85rem;color:var(--text-muted);">Email: <code><?= ADMIN_EMAIL ?></code></p>
-          <p style="font-size:.85rem;color:var(--text-muted);">Password: <code><?= ADMIN_PASSWORD ?></code></p>
-          <p style="font-size:.75rem;color:var(--red);margin-top:6px;">⚠️ Remove this section before going to production.</p>
-        </div>
-
-        <div style="background:var(--bg);border-radius:10px;padding:16px;margin-bottom:20px;">
-          <h4 style="margin-bottom:8px;">Database Connection</h4>
-          <p style="font-size:.85rem;color:var(--text-muted);margin-bottom:12px;">
-            Currently using <strong>PHP session storage</strong>. Reviews and data reset on session end.
-            Connect a MySQL database in <code>config.php</code> to persist all data.
-          </p>
-          <div style="font-size:.82rem;background:#1e1e1e;color:#d4d4d4;padding:12px;border-radius:6px;font-family:monospace;">
-            // Replace getReviews() / addReview() in config.php<br>
-            // with PDO queries to your database.
-          </div>
-        </div>
-
-        <div style="display:flex;justify-content:flex-end;gap:10px;margin-top:24px;padding-top:18px;border-top:1px solid var(--border);">
-          <a href="reset_data.php" class="btn-primary btn-sm"
-             style="background:#ffeaec;color:var(--red);border:1px solid #f5c2c7;width:auto;padding:8px 20px;"
-             onclick="return confirm('Reset all demo reviews and session data?')">
-            🗑️ Reset Demo Data
-          </a>
-          <a href="settings.php?tab=preferences" class="btn-secondary btn-sm" style="width:auto;padding:8px 20px;">Cancel</a>
-        </div>
       <?php endif; ?>
 
     </div>
@@ -316,27 +281,21 @@ $isDark = !empty($s['dark_mode']);
 </main>
 
 <script>
-// Live dark mode preview before saving
 function previewDarkMode(on) {
   document.documentElement.setAttribute('data-theme', on ? 'dark' : '');
 }
 </script>
 
 <style>
-/* Dark mode CSS variables — applied when data-theme="dark" */
 [data-theme="dark"] {
-  --bg: #1a1a2e;
-  --card-bg: #16213e;
-  --text: #e0e0e0;
-  --text-muted: #9a9ab0;
-  --border: #2d2d4e;
-  --shadow: 0 2px 12px rgba(0,0,0,.4);
-  --green-pale: rgba(52,211,153,.08);
+  --bg: #1a1a2e; --card-bg: #16213e; --text: #e0e0e0;
+  --text-muted: #9a9ab0; --border: #2d2d4e;
+  --shadow: 0 2px 12px rgba(0,0,0,.4); --green-pale: rgba(52,211,153,.08);
 }
 [data-theme="dark"] body { background: var(--bg); color: var(--text); }
 [data-theme="dark"] .main-nav { background: var(--card-bg); border-bottom-color: var(--border); }
-[data-theme="dark"] .card, [data-theme="dark"] .table-card,
-[data-theme="dark"] .review-form, [data-theme="dark"] .review-card { background: var(--card-bg); }
+[data-theme="dark"] .card, [data-theme="dark"] .settings-panel,
+[data-theme="dark"] .settings-sidebar { background: var(--card-bg); }
 [data-theme="dark"] input, [data-theme="dark"] select, [data-theme="dark"] textarea {
   background: #0f3460; color: var(--text); border-color: var(--border);
 }

@@ -103,7 +103,6 @@ usort($filteredMunis, fn($a,$b) => $sortBy === 'satisfaction'
       <option value="satisfaction"<?= $sortBy==='satisfaction'?'selected':'' ?>>Sort by Satisfaction</option>
     </select>
     <button type="submit" class="filters-search-btn">🔍 Search</button>
-    <a href="settings.php" class="filters-settings-btn" title="Settings">⚙</a>
   </form>
 
   <section style="margin-bottom:36px;">

@@ -55,15 +55,6 @@ $list = ($cat==='all') ? $all : array_values(array_filter($all,fn($a)=>$a['categ
           <span class="location">📍 <?= htmlspecialchars($a['municipality']) ?></span>
           <span style="font-size:.82rem;font-weight:600;color:var(--green);"><?= htmlspecialchars($a['price']) ?></span>
 
-           <!-- 🗺️ MAP - ADD THIS INSIDE EACH CARD -->
-<div style="height:160px;margin:12px -16px;border-radius:8px;overflow:hidden;">
-  <iframe 
-    width="100%" height="100%" 
-    src="https://www.google.com/maps/embed/v1/place?key=<?= GOOGLE_MAPS_API_KEY ?>&q=<?= urlencode($a['name'].', '.$a['municipality'].', Rizal, Philippines') ?>"
-    style="border:0;" allowfullscreen="" loading="lazy">
-  </iframe>
-</div>
-<!-- END MAP -->
 
           <a href="details.php?id=<?= $a['id'] ?>" class="btn-primary btn-sm">View Details</a>
         </div>

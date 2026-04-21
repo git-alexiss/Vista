@@ -53,32 +53,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
 
         if (!$error) {
-            // Save directly to DB with hashed password
-            $newId = registerUser([
-                'name'        => $name,
+            // Only store in session — display.php handles the actual DB insert
+            $_SESSION['pending_user'] = [
+                'name'        => sanitize($name),
                 'email'       => $email,
                 'password'    => $password,
-                'address'     => $address,
-                'nationality' => $nationality,
+                'address'     => sanitize($address),
+                'nationality' => sanitize($nationality),
                 'birthdate'   => $birthdate,
                 'role'        => $role,
-            ]);
-
-            if ($newId === false) {
-                $error = 'That email is already registered. <a href="login.php">Sign in instead?</a>';
-            } else {
-                // Store for display.php confirmation page
-                $_SESSION['pending_user'] = [
-                    'name'        => sanitize($name),
-                    'email'       => $email,
-                    'password'    => $password,
-                    'address'     => sanitize($address),
-                    'nationality' => sanitize($nationality),
-                    'birthdate'   => $birthdate,
-                    'role'        => $role,
-                ];
-                header('Location: display.php'); exit;
-            }
+            ];
+            header('Location: display.php'); exit;
         }
     }
 }

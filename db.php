@@ -8,7 +8,7 @@ define('DB_HOST', 'localhost');
 define('DB_NAME', 'vista_rizal');
 define('DB_USER', 'root');
 define('DB_PASS', '');   // XAMPP default — change if you set a password
-define('DB_PORT', 3306);
+define('DB_PORT', 3307);
 
 // ─── PDO Singleton ───────────────────────────────────────────────────────────
 function getDB(): PDO {
@@ -30,7 +30,7 @@ function getDB(): PDO {
         <div style="font-family:Segoe UI,Arial,sans-serif;max-width:520px;margin:60px auto;
                     padding:32px;background:#fff5f5;border:1.5px solid #fcc;
                     border-radius:12px;text-align:center;">
-            <h2 style="color:#c53030;">⚠️ Database Connection Failed</h2>
+            <h2 style="color:#c53030;">Database Connection Failed</h2>
             <p style="color:#555;margin-bottom:12px;">Please check the following:</p>
             <ul style="text-align:left;color:#555;line-height:2.2;margin:0 auto;max-width:320px;">
                 <li>XAMPP → MySQL is <strong>running</strong></li>

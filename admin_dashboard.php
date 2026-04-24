@@ -41,7 +41,7 @@ $muniAttractions = ($selectedMuni && isset($municipalities[$selectedMuni]))
 <head>
   <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
   <title>Admin Dashboard – VISTA-Rizal</title>
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="CSS\style.css">
   <style>
     .muni-grid {
       display: grid;
@@ -54,15 +54,15 @@ $muniAttractions = ($selectedMuni && isset($municipalities[$selectedMuni]))
       cursor: pointer; transition: transform .2s, box-shadow .2s;
       border: 2px solid transparent; text-decoration: none; color: inherit; display: block;
     }
-    .muni-card:hover { transform: translateY(-4px); box-shadow: 0 10px 32px rgba(0,0,0,.14); border-color: var(--green-light); }
-    .muni-card.active-muni { border-color: var(--green); }
-    .muni-cover { height: 90px; background: var(--green); position: relative; overflow: hidden; }
+    .muni-card:hover { transform: translateY(-4px); box-shadow: 0 10px 32px rgba(0,0,0,.14); border-color: var(--pimary-light); }
+    .muni-card.active-muni { border-color: var(--primary); }
+    .muni-cover { height: 90px; background: var(--primary); position: relative; overflow: hidden; }
     .muni-cover img { width:100%; height:100%; object-fit:cover; filter:brightness(.75); }
     .muni-cover-overlay { position:absolute; inset:0; background:linear-gradient(transparent 40%,rgba(0,0,0,.45)); }
     .muni-avatar-wrap { display:flex; justify-content:center; margin-top:-26px; position:relative; z-index:2; }
     .muni-avatar {
       width:52px; height:52px; border-radius:50%;
-      background:var(--green); color:#fff;
+      background:var(--primary); color:#fff;
       display:flex; align-items:center; justify-content:center;
       font-size:1.3rem; font-weight:900;
       border:3px solid #fff; box-shadow:0 2px 8px rgba(0,0,0,.18);
@@ -74,16 +74,16 @@ $muniAttractions = ($selectedMuni && isset($municipalities[$selectedMuni]))
     .dot-nature{background:#52b788;} .dot-cultural{background:#f4a261;} .dot-adventure{background:#9b72cf;}
     .muni-stats { display:flex; justify-content:center; gap:14px; border-top:1px solid var(--border); padding-top:8px; margin-top:4px; }
     .muni-stat { text-align:center; }
-    .muni-stat strong { display:block; font-size:.88rem; color:var(--green); }
+    .muni-stat strong { display:block; font-size:.88rem; color:var(--primary); }
     .muni-stat span   { font-size:.7rem; color:var(--text-muted); }
 
     .muni-panel {
       background:var(--card-bg); border-radius:14px; box-shadow:var(--shadow);
-      padding:22px; margin-bottom:24px; border-left:4px solid var(--green);
+      padding:22px; margin-bottom:24px; border-left:4px solid var(--primary);
       animation:fadeIn .3s ease;
     }
     .muni-panel-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:16px; flex-wrap:wrap; gap:10px; }
-    .muni-panel-header h3 { font-size:1.1rem; color:var(--green); }
+    .muni-panel-header h3 { font-size:1.1rem; color:var(--primary); }
     .close-panel { background:none; border:1px solid var(--border); border-radius:6px; padding:4px 12px; cursor:pointer; font-size:.82rem; color:var(--text-muted); text-decoration:none; }
     .close-panel:hover { background:var(--bg); }
     @media(max-width:768px){ .dashboard-two-col{grid-template-columns:1fr!important;} .muni-grid{grid-template-columns:1fr 1fr;} }
@@ -95,7 +95,7 @@ $muniAttractions = ($selectedMuni && isset($municipalities[$selectedMuni]))
 <main class="container">
 
   <div style="margin-bottom:24px;">
-    <h1 style="font-size:1.6rem;">📊 Admin Dashboard</h1>
+    <h1 style="font-size:1.6rem;">Admin Dashboard</h1>
     <p style="color:var(--text-muted);">Welcome, <?= htmlspecialchars($_SESSION['user']['name']) ?> · <?= date('l, F j Y') ?></p>
   </div>
 
@@ -135,7 +135,7 @@ $muniAttractions = ($selectedMuni && isset($municipalities[$selectedMuni]))
             </div>
             <div class="muni-stats">
               <div class="muni-stat"><strong><?= count($mData['attractions']) ?></strong><span>Spots</span></div>
-              <div class="muni-stat"><strong><?= $mData['avg_rating'] ? '⭐ '.$mData['avg_rating'] : '—' ?></strong><span>Avg</span></div>
+              <div class="muni-stat"><strong><?= $mData['avg_rating'] ? '★'.$mData['avg_rating'] : '—' ?></strong><span>Avg</span></div>
             </div>
           </div>
         </a>
@@ -158,7 +158,7 @@ $muniAttractions = ($selectedMuni && isset($municipalities[$selectedMuni]))
           <div class="card-content">
             <span class="category-badge category-<?= $a['category'] ?>"><?= ucfirst($a['category']) ?></span>
             <h3><?= htmlspecialchars($a['name']) ?></h3>
-            <div class="rating">⭐ <?= $a['rating'] ?>/5</div>
+            <div class="rating">★<?= $a['rating'] ?>/5</div>
             <a href="details.php?id=<?= $a['id'] ?>" class="btn-primary btn-sm">View Details</a>
           </div>
         </div>
@@ -182,7 +182,7 @@ $muniAttractions = ($selectedMuni && isset($municipalities[$selectedMuni]))
       </div>
     </div>
     <div class="table-card">
-      <h3>💬 Review Sentiment</h3>
+      <h3>Review Sentiment</h3>
       <?php if(!$reviews): ?>
         <p style="color:var(--text-muted);font-size:.9rem;">No reviews yet.</p>
       <?php else: ?>
@@ -212,7 +212,7 @@ $muniAttractions = ($selectedMuni && isset($municipalities[$selectedMuni]))
           <tr>
             <td><?= htmlspecialchars($attr['name']??'Unknown') ?></td>
             <td><?= htmlspecialchars($r['user']) ?></td>
-            <td><?= str_repeat('⭐',$r['rating']) ?></td>
+            <td><?= str_repeat('★',$r['rating']) ?></td>
             <td><span class="badge badge-<?= $r['sentiment'] ?>"><?= ucfirst($r['sentiment']) ?></span></td>
             <td style="max-width:180px;"><?= htmlspecialchars($r['text']) ?></td>
             <td><?= htmlspecialchars($r['date']) ?></td>
@@ -224,7 +224,7 @@ $muniAttractions = ($selectedMuni && isset($municipalities[$selectedMuni]))
   <?php endif; ?>
 
   <div style="text-align:right;">
-    <a href="reports.php" class="btn-primary" style="display:inline-block;width:auto;padding:10px 24px;">📈 Full Reports →</a>
+    <a href="reports.php" class="btn-primary" style="display:inline-block;width:auto;padding:10px 24px;">Full Reports →</a>
   </div>
 </main>
 </body>

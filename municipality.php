@@ -27,7 +27,7 @@ $displayed  = $filterCat === 'all' ? $attractions
 <head>
   <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
   <title><?= htmlspecialchars($muniName) ?> – VISTA-Rizal</title>
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="CSS\style.css">
 </head>
 <body>
 <?= renderNav('attractions') ?>
@@ -44,7 +44,7 @@ $displayed  = $filterCat === 'all' ? $attractions
       <div class="muni-profile-text">
         <h1><?= htmlspecialchars($muniName) ?></h1>
         <p> Rizal Province &nbsp;·&nbsp;
-          <?= $avgRating ? '⭐ '.$avgRating.'/5' : 'No ratings yet' ?>
+          <?= $avgRating ? '★'.$avgRating.'/5' : 'No ratings yet' ?>
           &nbsp;·&nbsp; <?= count($attractions) ?> Attractions</p>
         <div style="display:flex;gap:8px;margin-top:8px;flex-wrap:wrap;">
           <?php foreach($categories as $cat): ?>
@@ -57,7 +57,7 @@ $displayed  = $filterCat === 'all' ? $attractions
 
   <div class="muni-profile-stats">
     <div class="mps-item"><strong><?= count($attractions) ?></strong><span>Attractions</span></div>
-    <div class="mps-item"><strong><?= $avgRating ? '⭐ '.$avgRating : '—' ?></strong><span>Avg Rating</span></div>
+    <div class="mps-item"><strong><?= $avgRating ? '★'.$avgRating : '—' ?></strong><span>Avg Rating</span></div>
     <div class="mps-item"><strong><?= count($categories) ?></strong><span>Categories</span></div>
     <div class="mps-item">
       <strong><?= $avgRating ? min(99, round(($avgRating/5)*94)).'%' : '—' ?></strong>
@@ -88,7 +88,7 @@ $displayed  = $filterCat === 'all' ? $attractions
             <span class="category-badge category-<?= $a['category'] ?>"><?= ucfirst($a['category']) ?></span>
             <h3><?= htmlspecialchars($a['name']) ?></h3>
             <div class="rating">
-              <?= $rating ? '⭐ '.$rating.'/5' : '<span style="color:var(--text-muted);font-size:.82rem;">No ratings yet</span>' ?>
+              <?= $rating ? '★'.$rating.'/5' : '<span style="color:var(--text-muted);font-size:.82rem;">No ratings yet</span>' ?>
             </div>
             <p style="font-size:.8rem;color:var(--text-muted);margin-top:4px;"><?= htmlspecialchars($a['fact']) ?></p>
             <a href="details.php?id=<?= $a['id'] ?>" class="btn-primary btn-sm">View Details</a>

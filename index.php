@@ -65,7 +65,7 @@ usort($filteredMunis, fn($a,$b) => $sortBy === 'satisfaction'
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>VISTA-Rizal – Explore</title>
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="CSS\style.css">
 </head>
 <body>
 <?= renderNav('home') ?>
@@ -79,7 +79,7 @@ usort($filteredMunis, fn($a,$b) => $sortBy === 'satisfaction'
   <?php endif; ?>
 
   <section class="hero-section fade-in" style="margin-bottom:28px;">
-    <h1>Welcome back, <?= htmlspecialchars($user['name']??'Traveler') ?>! 👋</h1>
+    <h1>Welcome back, <?= htmlspecialchars($user['name']??'Traveler') ?>!</h1>
     <p>Discover the best of Rizal Province — <?= count($all) ?> attractions across <?= count($municipalities) ?> municipalities.</p>
     <?php if(($user['role']??'')==='admin'): ?>
       <a href="admin_dashboard.php" class="btn-primary"
@@ -94,15 +94,15 @@ usort($filteredMunis, fn($a,$b) => $sortBy === 'satisfaction'
            value="<?= htmlspecialchars($searchQ) ?>">
     <select name="cat">
       <option value="all"      <?= $filterCat==='all'      ?'selected':'' ?>>All Categories</option>
-      <option value="nature"   <?= $filterCat==='nature'   ?'selected':'' ?>>🌿 Nature</option>
-      <option value="cultural" <?= $filterCat==='cultural' ?'selected':'' ?>>🏛 Cultural</option>
-      <option value="adventure"<?= $filterCat==='adventure'?'selected':'' ?>>⛰ Adventure</option>
+      <option value="nature"   <?= $filterCat==='nature'   ?'selected':'' ?>>Nature</option>
+      <option value="cultural" <?= $filterCat==='cultural' ?'selected':'' ?>>Cultural</option>
+      <option value="adventure"<?= $filterCat==='adventure'?'selected':'' ?>>Adventure</option>
     </select>
     <select name="sort">
       <option value="rating"      <?= $sortBy==='rating'      ?'selected':'' ?>>Sort by Rating</option>
       <option value="satisfaction"<?= $sortBy==='satisfaction'?'selected':'' ?>>Sort by Satisfaction</option>
     </select>
-    <button type="submit" class="filters-search-btn">🔍 Search</button>
+    <button type="submit" class="filters-search-btn">⌕ Search</button>
   </form>
 
   <section style="margin-bottom:36px;">
@@ -141,7 +141,7 @@ usort($filteredMunis, fn($a,$b) => $sortBy === 'satisfaction'
             </div>
             <div class="moc-meta">
               <?php if($mData['avg_rating']): ?>
-                <span>⭐ <?= $mData['avg_rating'] ?></span>
+                <span>★<?= $mData['avg_rating'] ?></span>
               <?php else: ?>
                 <span style="color:var(--text-muted);font-size:.8rem;">No ratings yet</span>
               <?php endif; ?>
@@ -179,7 +179,7 @@ usort($filteredMunis, fn($a,$b) => $sortBy === 'satisfaction'
           <div class="card-content">
             <span class="category-badge category-<?= $a['category'] ?>"><?= ucfirst($a['category']) ?></span>
             <h3><?= htmlspecialchars($a['name']) ?></h3>
-            <div class="rating">⭐ <?= $rating ?>/5</div>
+            <div class="rating">★<?= $rating ?>/5</div>
             <span class="location"> <?= htmlspecialchars($a['municipality']) ?></span>
             <a href="details.php?id=<?= $a['id'] ?>" class="btn-primary btn-sm">View Details</a>
           </div>
@@ -208,7 +208,7 @@ usort($filteredMunis, fn($a,$b) => $sortBy === 'satisfaction'
               <span class="category-badge category-<?= $a['category'] ?>"><?= ucfirst($a['category']) ?></span>
               <h3><?= htmlspecialchars($a['name']) ?></h3>
               <div class="rating">
-                <?= $rating ? '⭐ '.$rating.'/5' : '<span style="color:var(--text-muted);font-size:.82rem;">No ratings yet</span>' ?>
+                <?= $rating ? '★'.$rating.'/5' : '<span style="color:var(--text-muted);font-size:.82rem;">No ratings yet</span>' ?>
               </div>
               <span class="location"> <?= htmlspecialchars($a['municipality']) ?></span>
               <a href="details.php?id=<?= $a['id'] ?>" class="btn-primary btn-sm">View Details</a>

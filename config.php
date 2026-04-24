@@ -122,13 +122,13 @@ function renderNav($activePage='') {
     $name = htmlspecialchars($user['name'] ?? 'User');
 
     $pages = [
-        'home'        => ['href'=>'index.php',       'label'=>'🏠 Home'],
-        'popular'     => ['href'=>'popular.php',     'label'=>'🔥 Popular'],
-        'recommended' => ['href'=>'recommended.php', 'label'=>'⭐ Recommended'],
+        'home'        => ['href'=>'index.php',       'label'=>'Home'],
+        'popular'     => ['href'=>'popular.php',     'label'=>'Popular'],
+        'recommended' => ['href'=>'recommended.php', 'label'=>'Recommended'],
     ];
     if ($role === 'admin') {
-        $pages['dashboard'] = ['href'=>'admin_dashboard.php','label'=>'📊 Dashboard'];
-        $pages['reports']   = ['href'=>'reports.php',        'label'=>'📈 Reports'];
+        $pages['dashboard'] = ['href'=>'admin_dashboard.php','label'=>'Dashboard'];
+        $pages['reports']   = ['href'=>'reports.php',        'label'=>'Reports'];
     }
 
     ob_start(); ?>
@@ -138,7 +138,7 @@ function renderNav($activePage='') {
     <form class="nav-search" action="search.php" method="GET">
       <input type="text" name="q" placeholder="Search attractions…"
              value="<?= htmlspecialchars($_GET['q']??'') ?>" autocomplete="off">
-      <button type="submit" aria-label="Search">&#128269;</button>
+      <button type="submit" aria-label="Search">⌕</button>
     </form>
     <div class="nav-dropdown-wrap" id="navDropdownWrap">
       <button class="hamburger" id="hamburgerBtn" aria-label="Open menu" aria-expanded="false">
@@ -161,9 +161,9 @@ function renderNav($activePage='') {
              role="menuitem"><?= $p['label'] ?></a>
         <?php endforeach; ?>
         <div class="dropdown-divider"></div>
-        <a href="profile.php" class="dropdown-item" role="menuitem">👤 My Profile</a>
-        <button class="dropdown-item" role="menuitem" onclick="openSettingsModal()" style="width:100%;text-align:left;background:none;border:none;cursor:pointer;padding:10px 16px;font-size:.9rem;">⚙️ Settings</button>
-        <a href="logout.php"  class="dropdown-item dropdown-logout" role="menuitem">🚪 Sign Out</a>
+        <a href="profile.php" class="dropdown-item" role="menuitem">My Profile</a>
+        <button class="dropdown-item" role="menuitem" onclick="openSettingsModal()" style="width:100%;text-align:left;background:none;border:none;cursor:pointer;padding:10px 16px;font-size:.9rem;">Settings</button>
+        <a href="logout.php"  class="dropdown-item dropdown-logout" role="menuitem">Sign Out</a>
       </div>
     </div>
   </div>
@@ -199,11 +199,11 @@ function renderNav($activePage='') {
                    font-size:1.4rem;cursor:pointer;color:var(--text-muted,#888);line-height:1;"
             aria-label="Close settings">✕</button>
 
-    <h2 style="margin:0 0 20px;font-size:1.25rem;">⚙️ Settings</h2>
+    <h2 style="margin:0 0 20px;font-size:1.25rem;">Settings</h2>
 
     <!-- Tab bar -->
     <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:22px;border-bottom:1px solid var(--border,#e2e8f0);padding-bottom:12px;">
-      <?php foreach(['preferences'=>'⚙️ Preferences','security'=>'🔒 Security','privacy'=>'🛡️ Privacy'] as $tk=>$tl): ?>
+      <?php foreach(['preferences'=>'Preferences','security'=>'Security','privacy'=>'Privacy'] as $tk=>$tl): ?>
         <button class="stab-btn" data-tab="stab-<?= $tk ?>"
                 onclick="switchSettingsTab(this)"
                 style="padding:7px 14px;border-radius:8px;border:1.5px solid var(--border,#e2e8f0);
@@ -260,14 +260,14 @@ function renderNav($activePage='') {
         <div style="margin-top:16px;">
           <label style="font-size:.85rem;font-weight:600;display:block;margin-bottom:6px;">Default Category Filter</label>
           <select name="category_filter" style="width:100%;padding:9px 12px;border-radius:8px;border:1.5px solid var(--border,#e2e8f0);font-size:.88rem;background:var(--input-bg,#f9fafb);">
-            <?php foreach(['all'=>'All Categories','nature'=>'🌿 Nature','cultural'=>'🏛 Cultural','adventure'=>'⛰ Adventure'] as $v=>$l): ?>
+            <?php foreach(['all'=>'All Categories','nature'=>'Nature','cultural'=>'Cultural','adventure'=>'Adventure'] as $v=>$l): ?>
               <option value="<?= $v ?>" <?= ($s['category_filter']??'all')===$v?'selected':'' ?>><?= $l ?></option>
             <?php endforeach; ?>
           </select>
         </div>
 
         <button type="submit" class="btn-primary"
-                style="width:auto;padding:10px 28px;margin-top:18px;">💾 Save Preferences</button>
+                style="width:auto;padding:10px 28px;margin-top:18px;">Save Preferences</button>
       </form>
     </div>
 
@@ -275,12 +275,12 @@ function renderNav($activePage='') {
     <div id="stab-security" class="stab-panel" style="display:none;">
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:20px;">
         <?php foreach([
-          ['🔒 CSRF Protection',      'Active',                    true],
-          ['🛡️ Brute-Force Lockout', 'Active (5 attempts)',        true],
-          ['📲 Two-Factor Auth (OTP)','Active on every login',      true],
-          ['⏱ Session Timeout',       '30 min of inactivity',      true],
-          ['🔐 Password Hashing',     'bcrypt, cost 12',            true],
-          ['📋 Activity Logging',     'Session-based',              true],
+          ['CSRF Protection',      'Active',                    true],
+          ['Brute-Force Lockout', 'Active (5 attempts)',        true],
+          ['Two-Factor Auth (OTP)','Active on every login',      true],
+          ['Session Timeout',       '30 min of inactivity',      true],
+          ['Password Hashing',     'bcrypt, cost 12',            true],
+          ['Activity Logging',     'Session-based',              true],
         ] as [$label,$status,$ok]): ?>
           <div style="background:var(--bg,#f5f7fa);border-radius:10px;padding:12px;border-left:4px solid <?= $ok?'var(--green,#2d7a4f)':'var(--gold-dark,#b7791f)' ?>;">
             <div style="font-weight:700;font-size:.82rem;"><?= $label ?></div>
@@ -300,7 +300,7 @@ function renderNav($activePage='') {
         <div class="input-group"><label>Current Password</label><input type="password" name="current_password" required></div>
         <div class="input-group"><label>New Password</label><input type="password" name="new_password" required minlength="6"></div>
         <div class="input-group"><label>Confirm New Password</label><input type="password" name="confirm_password" required></div>
-        <button type="submit" class="btn-primary" style="width:auto;padding:10px 28px;">🔑 Update Password</button>
+        <button type="submit" class="btn-primary" style="width:auto;padding:10px 28px;">Update Password</button>
       </form>
       <?php endif; ?>
 
@@ -339,7 +339,7 @@ function renderNav($activePage='') {
           <label class="toggle"><input type="checkbox" checked disabled><span class="toggle-slider"></span></label>
         </div>
 
-        <button type="submit" class="btn-primary" style="width:auto;padding:10px 28px;margin-top:8px;">💾 Save Privacy Settings</button>
+        <button type="submit" class="btn-primary" style="width:auto;padding:10px 28px;margin-top:8px;">Save Privacy Settings</button>
       </form>
 
       <div style="background:var(--green-pale,#f0faf4);border-radius:10px;padding:14px;margin-top:18px;border-left:4px solid var(--green,#2d7a4f);">

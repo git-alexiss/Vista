@@ -9,7 +9,7 @@ $popular = getPopularAttractions();
 <head>
   <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
   <title>Popular – VISTA-Rizal</title>
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="CSS\style.css">
 </head>
 <body>
 <?= renderNav('popular') ?>
@@ -38,7 +38,7 @@ $popular = getPopularAttractions();
         <div class="card-content">
           <span class="category-badge category-<?= $a['category'] ?>"><?= ucfirst($a['category']) ?></span>
           <h3><?= htmlspecialchars($a['name']) ?></h3>
-          <div class="rating">⭐ <?= $rating ?>/5</div>
+          <div class="rating">★<?= $rating ?>/5</div>
           <span class="location"> <?= htmlspecialchars($a['municipality']) ?></span>
           <p style="font-size:.82rem;color:var(--text-muted);margin-top:4px;"><?= htmlspecialchars($a['fact']) ?></p>
           <a href="details.php?id=<?= $a['id'] ?>" class="btn-primary btn-sm">View Details</a>

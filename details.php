@@ -37,7 +37,7 @@ $avgRating = getAttractionRating($id);
 <head>
   <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
   <title><?= htmlspecialchars($a['name']) ?> – VISTA-Rizal</title>
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="CSS\style.css">
   <style>
     /* ── Interactive star rating ── */
     .star-rating { display:flex; gap:6px; flex-direction:row-reverse; justify-content:flex-end; }
@@ -79,7 +79,7 @@ $avgRating = getAttractionRating($id);
       <div class="meta-label">Rating</div>
       <div class="meta-value">
         <?php if($avgRating): ?>
-          ⭐ <?= $avgRating ?>/5
+          ★<?= $avgRating ?>/5
         <?php else: ?>
           <span style="color:var(--text-muted);font-size:.85rem;">No ratings yet</span>
         <?php endif; ?>
@@ -149,7 +149,7 @@ $avgRating = getAttractionRating($id);
       <?php foreach(array_reverse($reviews) as $r): ?>
         <div class="review-card">
           <div class="rev-header">
-            <span class="rev-user">👤 <?= htmlspecialchars($r['user']) ?></span>
+            <span class="rev-user"><?= htmlspecialchars($r['user']) ?></span>
             <span class="rev-date"><?= htmlspecialchars($r['date']) ?></span>
           </div>
           <div style="margin-bottom:6px;display:flex;align-items:center;gap:8px;">

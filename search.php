@@ -20,7 +20,7 @@ if ($catFilter && $catFilter!=='all') {
 <?= renderNav() ?>
 <main class="container">
   <div class="search-hero">
-    <h1>🔍 Search Attractions</h1>
+    <h1>Search Attractions</h1>
     <p style="color:var(--text-muted)">Find places by name, category, or municipality</p>
     <form method="GET" action="search.php">
       <input type="text" name="q" value="<?= htmlspecialchars($q) ?>" placeholder="e.g. waterfall, Antipolo, adventure…">
@@ -31,7 +31,7 @@ if ($catFilter && $catFilter!=='all') {
   <?php if($q!==''): ?>
     <!-- Category filter tabs -->
     <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px;">
-      <?php foreach(['all'=>'All','nature'=>'🌿 Nature','cultural'=>'🏛 Cultural','adventure'=>'⛰ Adventure'] as $val=>$label): ?>
+      <?php foreach(['all'=>'All','nature'=>'Nature','cultural'=>'Cultural','adventure'=>'Adventure'] as $val=>$label): ?>
         <a href="search.php?q=<?= urlencode($q) ?>&cat=<?= $val ?>"
            class="badge <?= ($catFilter===$val||($val==='all'&&!$catFilter))?'badge-positive':'' ?>"
            style="padding:6px 14px;font-size:.85rem;">

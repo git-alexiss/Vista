@@ -35,13 +35,13 @@ $maxCat   = max(array_values($catCount)?:[1]);
 <head>
   <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
   <title>Reports – VISTA-Rizal</title>
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="CSS\style.css">
 </head>
 <body>
 <?= renderNav('reports') ?>
 <main class="container">
   <div style="margin-bottom:28px;">
-    <h1 style="font-size:1.6rem;">📈 Analytics Reports</h1>
+    <h1 style="font-size:1.6rem;">Analytics Reports</h1>
     <p style="color:var(--text-muted);">System-wide performance and visitor satisfaction data · Generated <?= date('F j, Y') ?></p>
   </div>
 
@@ -91,7 +91,7 @@ $maxCat   = max(array_values($catCount)?:[1]);
 
   <!-- ── Sentiment report ── -->
   <div class="report-section">
-    <h3>💬 Review Sentiment Analysis</h3>
+    <h3>Review Sentiment Analysis</h3>
     <?php if(!$reviews): ?>
       <p style="color:var(--text-muted);">No reviews yet. Sentiment analysis will appear here as tourists submit reviews.</p>
     <?php else: ?>
@@ -141,7 +141,7 @@ $maxCat   = max(array_values($catCount)?:[1]);
               <td style="color:var(--green);font-weight:700;"><?= $p ?></td>
               <td style="color:var(--text-muted);font-weight:700;"><?= $n ?></td>
               <td style="color:var(--red);font-weight:700;"><?= $ng ?></td>
-              <td>⭐ <?= $avg ?></td>
+              <td>★<?= $avg ?></td>
             </tr>
           <?php endforeach; ?>
         </tbody>
@@ -151,7 +151,7 @@ $maxCat   = max(array_values($catCount)?:[1]);
 
   <!-- ── Category report ── -->
   <div class="report-section">
-    <h3>🗂 Attractions by Category</h3>
+    <h3>Attractions by Category</h3>
     <div class="bar-chart">
       <?php foreach($catCount as $cat=>$count): ?>
         <div class="bar-row">

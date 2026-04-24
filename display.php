@@ -34,7 +34,7 @@ $user = $_SESSION['pending_user'];
 <head>
   <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
   <title>VISTA-Rizal – Review Registration</title>
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="CSS\style.css">
 </head>
 <body>
 <div class="auth-container">
@@ -78,7 +78,7 @@ $user = $_SESSION['pending_user'];
       <form method="POST" style="flex:1;">
         <input type="hidden" name="csrf"   value="<?= $csrf ?>">
         <input type="hidden" name="action" value="confirm_register">
-        <button type="submit" class="login-btn"> Confirm &amp; Register</button>
+        <button type="submit" class="login-btn"> Confirm &amp; Sign in</button>
       </form>
     </div>
   </div>

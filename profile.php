@@ -9,12 +9,12 @@ $user = $_SESSION['user'];
 <head>
   <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
   <title>Profile – VISTA-Rizal</title>
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="CSS\style.css">
 </head>
 <body>
 <?= renderNav() ?>
 <main class="container">
-  <h1 style="font-size:1.6rem;margin-bottom:20px;">👤 My Profile</h1>
+  <h1 style="font-size:1.6rem;margin-bottom:20px;">My Profile</h1>
   <div class="profile-card">
     <div class="profile-avatar-big"><?= strtoupper(substr($user['name']??'U',0,1)) ?></div>
     <div style="margin-bottom:16px;">
@@ -54,7 +54,7 @@ $user = $_SESSION['user'];
             <a href="details.php?id=<?= $r['attraction_id'] ?>" style="font-weight:700;"><?= htmlspecialchars($attr['name']??'Unknown') ?></a>
             <span class="rev-date"><?= htmlspecialchars($r['date']) ?></span>
           </div>
-          <div style="margin-bottom:4px;"><?= str_repeat('⭐',$r['rating']) ?> <span class="badge badge-<?= $r['sentiment'] ?>"><?= ucfirst($r['sentiment']) ?></span></div>
+          <div style="margin-bottom:4px;"><?= str_repeat('★',$r['rating']) ?> <span class="badge badge-<?= $r['sentiment'] ?>"><?= ucfirst($r['sentiment']) ?></span></div>
           <p style="font-size:.9rem;"><?= htmlspecialchars($r['text']) ?></p>
         </div>
       <?php endforeach; ?>

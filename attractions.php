@@ -12,7 +12,7 @@ $list = ($cat==='all') ? $all : array_values(array_filter($all,fn($a)=>$a['categ
 <head>
   <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
   <title>Attractions – VISTA-Rizal</title>
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="CSS\style.css">
 </head>
 <body>
 <?= renderNav('attractions') ?>
@@ -23,7 +23,7 @@ $list = ($cat==='all') ? $all : array_values(array_filter($all,fn($a)=>$a['categ
   </div>
 
   <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:20px;">
-    <?php foreach(['all'=>'All','nature'=>'🌿 Nature','cultural'=>'🏛 Cultural','adventure'=>'⛰ Adventure'] as $val=>$label): ?>
+    <?php foreach(['all'=>'All','nature'=>'Nature','cultural'=>'Cultural','adventure'=>'Adventure'] as $val=>$label): ?>
       <a href="attractions.php?cat=<?= $val ?>"
          style="padding:8px 18px;border-radius:20px;font-weight:600;font-size:.85rem;
                 background:<?= $cat===$val?'var(--green)':'var(--green-pale)' ?>;
@@ -50,7 +50,7 @@ $list = ($cat==='all') ? $all : array_values(array_filter($all,fn($a)=>$a['categ
           <span class="category-badge category-<?= $a['category'] ?>"><?= ucfirst($a['category']) ?></span>
           <h3><?= htmlspecialchars($a['name']) ?></h3>
           <div class="rating">
-            <?= $rating ? '⭐ '.$rating.'/5' : '<span style="color:var(--text-muted);font-size:.82rem;">No ratings yet</span>' ?>
+            <?= $rating ? '★'.$rating.'/5' : '<span style="color:var(--text-muted);font-size:.82rem;">No ratings yet</span>' ?>
           </div>
           <span class="location"><?= htmlspecialchars($a['municipality']) ?></span>
           <span style="font-size:.82rem;font-weight:600;color:var(--green);"><?= htmlspecialchars($a['price']) ?></span>

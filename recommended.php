@@ -9,13 +9,13 @@ $recommended = getRecommendations($_SESSION['recently_viewed']??[]);
 <head>
   <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
   <title>Recommended – VISTA-Rizal</title>
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="CSS\style.css">
 </head>
 <body>
 <?= renderNav('recommended') ?>
 <main class="container">
   <div class="hero-section fade-in">
-    <h1>⭐ Recommended for You</h1>
+    <h1>Recommended for You</h1>
     <p>Top picks you haven't explored yet</p>
   </div>
   <?php if(empty($recommended)): ?>
@@ -35,7 +35,7 @@ $recommended = getRecommendations($_SESSION['recently_viewed']??[]);
             <span class="category-badge category-<?= $a['category'] ?>"><?= ucfirst($a['category']) ?></span>
             <h3><?= htmlspecialchars($a['name']) ?></h3>
             <div class="rating">
-              <?= $rating ? '⭐ '.$rating.'/5' : '<span style="color:var(--text-muted);font-size:.82rem;">No ratings yet</span>' ?>
+              <?= $rating ? '★'.$rating.'/5' : '<span style="color:var(--text-muted);font-size:.82rem;">No ratings yet</span>' ?>
             </div>
             <span class="location"> <?= htmlspecialchars($a['municipality']) ?></span>
             <p style="font-size:.82rem;color:var(--text-muted);margin-top:4px;"><?= htmlspecialchars($a['fact']) ?></p>

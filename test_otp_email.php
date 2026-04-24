@@ -98,25 +98,25 @@ if (function_exists('curl_init') && strpos($BREVO_API_KEY, 'PASTE') === false &&
     body { font-family: Arial, sans-serif; background: #f5f7fa; padding: 40px 20px; }
     .box { max-width: 600px; margin: auto; background: #fff; border-radius: 16px;
            padding: 32px; box-shadow: 0 4px 24px rgba(0,0,0,.1); }
-    h2 { color: #2d7a4f; margin-top: 0; }
+    h2 { color: #4D7298; margin-top: 0; }
     .check { padding: 12px 16px; border-radius: 8px; margin-bottom: 10px;
              font-size: .93rem; border-left: 4px solid #ccc; background: #fafafa; }
-    .check.ok  { border-color: #38a169; background: #f0faf4; }
+    .check.ok  { border-color: #77A6B6; background: #f0faf4; }
     .check.err { border-color: #e53e3e; background: #fff5f5; }
-    .check.warn{ border-color: #d69e2e; background: #fffbea; }
+    .check.warn{ border-color: #D0EFB1; background: #fffbea; }
     .send-result { margin-top: 20px; padding: 16px; border-radius: 10px;
                    font-weight: 600; font-size: 1rem; }
-    .send-result.ok  { background: #f0faf4; color: #276749; border: 1.5px solid #9ae6b4; }
+    .send-result.ok  { background: #f0faf4; color: #3e5e7d; border: 1.5px solid #9DC3C2; }
     .send-result.err { background: #fff5f5; color: #c53030; border: 1.5px solid #ffc9c9; }
     pre { background: #f1f1f1; padding: 12px; border-radius: 8px; font-size:.8rem;
           overflow-x:auto; margin-top: 10px; }
-    .warning-box { background: #fff8e7; border: 1.5px solid #d69e2e; border-radius: 10px;
-                   padding: 14px 18px; margin-top: 24px; font-size: .85rem; color: #7b5c00; }
+    .warning-box { background: #fff8e7; border: 1.5px solid #D0EFB1; border-radius: 10px;
+                   padding: 14px 18px; margin-top: 24px; font-size: .85rem; color: #9fd865; }
   </style>
 </head>
 <body>
 <div class="box">
-  <h2>🔧 VISTA-Rizal — Brevo Email Diagnostic</h2>
+  <h2>VISTA-Rizal — Brevo Email Diagnostic</h2>
 
   <?php foreach ($results as $key => $msg): ?>
     <?php $cls = str_starts_with($msg,'✅') ? 'ok' : (str_starts_with($msg,'⚠️') ? 'warn' : 'err'); ?>
@@ -133,7 +133,7 @@ if (function_exists('curl_init') && strpos($BREVO_API_KEY, 'PASTE') === false &&
   <?php endif; ?>
 
   <div class="warning-box">
-    🗑️ <strong>Important:</strong> Delete <code>test_otp_email.php</code> from your server immediately after testing!
+    <strong>Important:</strong> Delete <code>test_otp_email.php</code> from your server immediately after testing!
     This file contains your API key in plain text.
   </div>
 </div>

@@ -84,7 +84,7 @@ $isDark = !empty($s['dark_mode']);
 <head>
   <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
   <title>Settings – VISTA-Rizal</title>
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="CSS\style.css">
 </head>
 <body>
 <?= renderNav('') ?>
@@ -106,7 +106,7 @@ $isDark = !empty($s['dark_mode']);
           <li><a href="settings.php?tab=<?= $key ?>" class="<?= $tab===$key?'active':'' ?>"><?= $label ?></a></li>
         <?php endforeach; ?>
         <li style="border-top:1px solid var(--border);margin-top:8px;padding-top:8px;">
-          <a href="profile.php">👤 My Profile</a>
+          <a href="profile.php">My Profile</a>
         </li>
       </ul>
     </div>
@@ -168,7 +168,7 @@ $isDark = !empty($s['dark_mode']);
           <div class="input-group" style="margin-top:20px;">
             <label>Default Category Filter</label>
             <select name="category_filter">
-              <?php foreach(['all'=>'All Categories','nature'=>'🌿 Nature','cultural'=>'🏛 Cultural','adventure'=>'⛰ Adventure'] as $v=>$l): ?>
+              <?php foreach(['all'=>'All Categories','nature'=>'Nature','cultural'=>'Cultural','adventure'=>'Adventure'] as $v=>$l): ?>
                 <option value="<?= $v ?>" <?= ($s['category_filter']??'all')===$v?'selected':'' ?>><?= $l ?></option>
               <?php endforeach; ?>
             </select>

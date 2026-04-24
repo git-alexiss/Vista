@@ -85,30 +85,30 @@ $expiresIn = isset($_SESSION['otp']['expires']) ? max(0, $_SESSION['otp']['expir
   <style>
     .otp-container{min-height:100vh;display:flex;align-items:center;justify-content:center;background:var(--bg,#f5f7fa);padding:20px}
     .otp-card{background:var(--card-bg,#fff);border-radius:20px;padding:40px 36px;max-width:440px;width:100%;box-shadow:0 8px 40px rgba(0,0,0,.10);text-align:center}
-    .otp-logo{font-size:1.6rem;font-weight:800;color:var(--green,#2d7a4f);margin-bottom:6px;letter-spacing:-.5px}
-    .otp-logo span{color:var(--gold-dark,#b7791f)}
+    .otp-logo{font-size:1.6rem;font-weight:800;color:var(--blue,#4D7298);margin-bottom:6px;letter-spacing:-.5px}
+    .otp-logo span{color:var(--green-dark,#9fd865)}
     .otp-icon{width:72px;height:72px;background:linear-gradient(135deg,#e8f5ec,#c8e6d0);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:20px auto 16px;font-size:2rem}
     .otp-card h2{font-size:1.35rem;color:var(--text,#1a1a1a);margin:0 0 8px}
     .subtitle{font-size:.88rem;color:var(--text-muted,#666);line-height:1.6;margin-bottom:24px}
-    .subtitle strong{color:var(--green,#2d7a4f)}
-    .demo-otp-box{background:#fff8e7;border:1.5px solid var(--gold,#d69e2e);border-radius:10px;padding:14px 18px;margin-bottom:22px;font-size:.84rem;color:#7b5c00}
-    .demo-code{font-size:2rem;font-weight:800;letter-spacing:8px;color:var(--green,#2d7a4f);display:block;margin:6px 0 4px}
+    .subtitle strong{color:var(--blue,#4D7298)}
+    .demo-otp-box{background:#fff8e7;border:1.5px solid var(--green,#D0EFB1);border-radius:10px;padding:14px 18px;margin-bottom:22px;font-size:.84rem;color:#7b5c00}
+    .demo-code{font-size:2rem;font-weight:800;letter-spacing:8px;color:var(--blue,#4D7298);display:block;margin:6px 0 4px}
     .send-error{background:#fff5f5;border:1px solid #ffc9c9;color:#c53030;border-radius:8px;padding:10px 14px;font-size:.83rem;margin-bottom:14px}
     .otp-inputs{display:flex;gap:10px;justify-content:center;margin-bottom:22px}
     .otp-inputs input{width:52px;height:60px;text-align:center;font-size:1.5rem;font-weight:700;border:2px solid var(--border,#e2e8f0);border-radius:12px;background:var(--input-bg,#f9fafb);color:var(--text,#1a1a1a);outline:none;transition:border-color .2s,box-shadow .2s;-moz-appearance:textfield}
     .otp-inputs input::-webkit-outer-spin-button,.otp-inputs input::-webkit-inner-spin-button{-webkit-appearance:none}
-    .otp-inputs input:focus{border-color:var(--green,#2d7a4f);box-shadow:0 0 0 3px rgba(45,122,79,.15);background:#fff}
-    .otp-inputs input.filled{border-color:var(--green,#2d7a4f);background:#f0faf4}
+    .otp-inputs input:focus{border-color:var(--blue,#4D7298);box-shadow:0 0 0 3px rgba(45,122,79,.15);background:#fff}
+    .otp-inputs input.filled{border-color:var(--blue,#4D7298);background:#f0faf4}
     .otp-error{background:#fff5f5;border:1px solid #ffc9c9;color:#c53030;border-radius:8px;padding:10px 14px;font-size:.85rem;margin-bottom:16px;text-align:left}
     .otp-error a{color:#c53030;font-weight:600}
     .otp-success{background:#f0faf4;border:1px solid #9ae6b4;color:#276749;border-radius:8px;padding:10px 14px;font-size:.85rem;margin-bottom:16px}
-    .otp-btn{width:100%;padding:14px;background:var(--green,#2d7a4f);color:#fff;border:none;border-radius:10px;font-size:1rem;font-weight:700;cursor:pointer;transition:background .2s,transform .1s;margin-bottom:16px}
+    .otp-btn{width:100%;padding:14px;background:var(--blue,#4D7298);color:#fff;border:none;border-radius:10px;font-size:1rem;font-weight:700;cursor:pointer;transition:background .2s,transform .1s;margin-bottom:16px}
     .otp-btn:hover{background:#235f3d;transform:translateY(-1px)}
     .otp-timer{font-size:.83rem;color:var(--text-muted,#888);margin-bottom:12px}
-    #countdown{font-weight:700;color:var(--green,#2d7a4f)}
+    #countdown{font-weight:700;color:var(--blue,#4D7298)}
     #countdown.expired{color:#c53030}
     .otp-actions{display:flex;justify-content:space-between;align-items:center;font-size:.84rem;margin-top:8px}
-    .otp-actions a,.otp-actions button{color:var(--green,#2d7a4f);font-weight:600;background:none;border:none;cursor:pointer;padding:0;font-size:.84rem;text-decoration:none}
+    .otp-actions a,.otp-actions button{color:var(--blue,#4D7298);font-weight:600;background:none;border:none;cursor:pointer;padding:0;font-size:.84rem;text-decoration:none}
     .otp-actions a:hover,.otp-actions button:hover{text-decoration:underline}
     .otp-actions button:disabled{color:var(--text-muted,#aaa);cursor:not-allowed;text-decoration:none}
     .footer-note{margin-top:28px;font-size:.75rem;color:var(--text-muted,#aaa)}
@@ -132,7 +132,7 @@ $expiresIn = isset($_SESSION['otp']['expires']) ? max(0, $_SESSION['otp']['expir
 
     <?php if(isset($_SESSION['demo_otp'])): ?>
       <div class="demo-otp-box">
-        <em>🔧 Demo mode — your OTP:</em>
+        <em>Demo mode — your OTP:</em>
         <span class="demo-code"><?= htmlspecialchars($_SESSION['demo_otp']) ?></span>
         <small>In production, this is sent via email.</small>
       </div>

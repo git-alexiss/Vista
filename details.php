@@ -23,7 +23,7 @@ if ($_SERVER['REQUEST_METHOD']==='POST' && ($_POST['action']??'')==='review') {
         $text   = trim($_POST['review_text']??'');
         if ($rating<1||$rating>5||empty($text)) { $reviewMsg='error:Please select a star rating and write a review.'; }
         else {
-            addReview($id, $_SESSION['user']['name']??'Anonymous', $rating, $text);
+               addReview($id, (int)($_SESSION['user']['id'] ?? 0), $rating, $text);
             $reviewMsg='success:Thanks for your review!';
         }
     }
@@ -96,12 +96,7 @@ $avgRating = getAttractionRating($id);
     <div class="meta-item">
       <div class="meta-label">Municipality</div>
       <div class="meta-value"> <?= htmlspecialchars($a['municipality']) ?></div>
-    </div>
-    <div class="meta-item">
-      <div class="meta-label">Entry Fee</div>
-      <div class="meta-value"><?= htmlspecialchars($a['price']) ?></div>
-    </div>
-  </div>
+   
 
   <div class="detail-content">
     <h2 style="margin-bottom:10px;">About this Place</h2>
@@ -150,7 +145,7 @@ $avgRating = getAttractionRating($id);
         <div class="review-card">
           <div class="rev-header">
             <span class="rev-user"><?= htmlspecialchars($r['user']) ?></span>
-            <span class="rev-date"><?= htmlspecialchars($r['date']) ?></span>
+            <span class="rev-date"><?= htmlspecialchars($r['created_at']) ?></span>
           </div>
           <div style="margin-bottom:6px;display:flex;align-items:center;gap:8px;">
             <span class="stars-display">
@@ -160,7 +155,7 @@ $avgRating = getAttractionRating($id);
             </span>
             <span class="badge badge-<?= $r['sentiment'] ?>"><?= ucfirst($r['sentiment']) ?></span>
           </div>
-          <p style="font-size:.9rem;"><?= htmlspecialchars($r['text']) ?></p>
+          <p style="font-size:.9rem;"><?= htmlspecialchars($r['review_text']) ?></p>
         </div>
       <?php endforeach; ?>
     </div>

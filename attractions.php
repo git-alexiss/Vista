@@ -53,8 +53,7 @@ $list = ($cat==='all') ? $all : array_values(array_filter($all,fn($a)=>$a['categ
             <?= $rating ? '★'.$rating.'/5' : '<span style="color:var(--text-muted);font-size:.82rem;">No ratings yet</span>' ?>
           </div>
           <span class="location"><?= htmlspecialchars($a['municipality']) ?></span>
-          <span style="font-size:.82rem;font-weight:600;color:var(--green);"><?= htmlspecialchars($a['price']) ?></span>
-
+          
 
           <a href="details.php?id=<?= $a['id'] ?>" class="btn-primary btn-sm">View Details</a>
         </div>

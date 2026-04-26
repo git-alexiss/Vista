@@ -81,7 +81,7 @@ $expiresIn = isset($_SESSION['otp']['expires']) ? max(0, $_SESSION['otp']['expir
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>VISTA-Rizal – Verify OTP</title>
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="CSS\style.css">
   <style>
     .otp-container{min-height:100vh;display:flex;align-items:center;justify-content:center;background:var(--bg,#f5f7fa);padding:20px}
     .otp-card{background:var(--card-bg,#fff);border-radius:20px;padding:40px 36px;max-width:440px;width:100%;box-shadow:0 8px 40px rgba(0,0,0,.10);text-align:center}

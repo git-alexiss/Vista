@@ -90,7 +90,7 @@ if ($_SERVER['REQUEST_METHOD']==='POST' && ($_POST['action']??'')==='login') {
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>VISTA-Rizal – Sign In</title>
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="CSS\style.css">
   <style>
     .social-divider{display:flex;align-items:center;gap:10px;margin:18px 0}
     .social-divider::before,.social-divider::after{content:'';flex:1;height:1px;background:var(--border,#e2e8f0)}

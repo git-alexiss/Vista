@@ -18,7 +18,7 @@ $municipalities = [];
 foreach ($all as $a) {
     $m = $a['municipality'];
     if (!isset($municipalities[$m])) {
-        $municipalities[$m] = ['name'=>$m,'attractions'=>[],'cover'=>$a['image'],'categories'=>[]];
+        $municipalities[$m] = ['name'=>$m,'attractions'=>[],'categories'=>[],'cover'=>getMunicipalityImage($m)];
     }
     $municipalities[$m]['attractions'][] = $a;
     $municipalities[$m]['categories'][]  = $a['category'];
@@ -153,8 +153,7 @@ $muniAttractions = ($selectedMuni && isset($municipalities[$selectedMuni]))
     <div class="cards-grid">
       <?php foreach($muniAttractions as $a): ?>
         <div class="card">
-          <img src="<?= htmlspecialchars($a['image']) ?>" alt="<?= htmlspecialchars($a['name']) ?>"
-               onerror="this.src='images/placeholder.jpg'" style="height:140px;object-fit:cover;">
+          <img src="<?= htmlspecialchars(getAttractionImage($a['name'])) ?>" alt="<?= htmlspecialchars($a['name']) ?>" onerror="this.src='images/placeholder.jpg'">
           <div class="card-content">
             <span class="category-badge category-<?= $a['category'] ?>"><?= ucfirst($a['category']) ?></span>
             <h3><?= htmlspecialchars($a['name']) ?></h3>

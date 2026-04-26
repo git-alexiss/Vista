@@ -18,7 +18,7 @@ $list = ($cat==='all') ? $all : array_values(array_filter($all,fn($a)=>$a['categ
 <?= renderNav('attractions') ?>
 <main class="container">
   <div class="hero-section fade-in">
-    <h1>🗺 All Attractions</h1>
+    <h1>All Attractions</h1>
     <p>Explore <?= count($all) ?> destinations across Rizal Province</p>
   </div>
 
@@ -45,7 +45,7 @@ $list = ($cat==='all') ? $all : array_values(array_filter($all,fn($a)=>$a['categ
       $rating = getAttractionRating($a['id']);
     ?>
       <div class="card">
-        <img src="<?= htmlspecialchars($a['image']) ?>" alt="<?= htmlspecialchars($a['name']) ?>" onerror="this.src='images/placeholder.jpg'">
+        <img src="<?= htmlspecialchars(getAttractionImage($a['name'])) ?>" alt="<?= htmlspecialchars($a['name']) ?>" onerror="this.src='images/placeholder.jpg'">
         <div class="card-content">
           <span class="category-badge category-<?= $a['category'] ?>"><?= ucfirst($a['category']) ?></span>
           <h3><?= htmlspecialchars($a['name']) ?></h3>

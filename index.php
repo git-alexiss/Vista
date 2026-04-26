@@ -16,7 +16,7 @@ $municipalities = [];
 foreach ($all as $a) {
     $m = $a['municipality'];
     if (!isset($municipalities[$m])) {
-        $municipalities[$m] = ['name'=>$m,'attractions'=>[],'categories'=>[],'cover'=>$a['image']];
+        $municipalities[$m] = ['name'=>$m,'attractions'=>[],'categories'=>[],'cover'=>getMunicipalityImage($m)];
     }
     $municipalities[$m]['attractions'][] = $a;
     $municipalities[$m]['categories'][]  = $a['category'];
@@ -107,7 +107,7 @@ usort($filteredMunis, fn($a,$b) => $sortBy === 'satisfaction'
 
   <section style="margin-bottom:36px;">
     <div class="section-header">
-      <h2>🗺 Explore Municipalities</h2>
+      <h2>Explore Municipalities</h2>
       <?php if($searchQ||$filterCat!=='all'): ?>
         <a href="index.php" style="font-size:.85rem;color:var(--text-muted);">✕ Clear filters</a>
       <?php endif; ?>

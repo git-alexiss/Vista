@@ -58,6 +58,17 @@ function classifyReview($text) {
     return 'neutral';
 }
 
+//─── Image Display ────────────────────────────────────────────────────────────
+function getAttractionImage(string $name): string {
+    $slug = strtolower(preg_replace('/[^a-zA-Z0-9]+/', '-', trim($name)));
+    return 'CSS\images\attractions/' . $slug . '.jpg';
+}
+
+function getMunicipalityImage(string $name): string {
+    $slug = strtolower(preg_replace('/[^a-zA-Z0-9]+/', '-', trim($name)));
+    return 'CSS\images\municipalities/' . $slug . '.jpg';
+}
+
 // ─── Brute-force / lockout ────────────────────────────────────────────────────
 function isLockedOut(): bool {
     $ip = getClientIP();

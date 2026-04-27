@@ -138,10 +138,10 @@ $avgRating = getAttractionRating($id);
     </form>
   </div>
 
-  <?php if($reviews): ?>
+  <?php if($allReviews): ?>
     <div class="detail-content">
-      <h3 style="margin-bottom:16px;">Reviews (<?= count($reviews) ?>)</h3>
-      <?php foreach(array_reverse($reviews) as $r): ?>
+      <h3 style="margin-bottom:16px;">Reviews (<?= count($allReviews) ?>)</h3>
+      <?php foreach($allReviews as $r): ?>
         <div class="review-card">
           <div class="rev-header">
             <span class="rev-user"><?= htmlspecialchars($r['user']) ?></span>

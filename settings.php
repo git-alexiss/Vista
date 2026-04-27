@@ -157,6 +157,7 @@ $isDark = !empty($s['dark_mode']);
               <strong>Dark Mode</strong>
               <small>Use dark theme across the entire app</small>
             </div>
+            
             <label class="toggle">
               <input type="checkbox" name="dark_mode" id="darkModeToggle"
                      <?= $isDark?'checked':'' ?>

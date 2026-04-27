@@ -35,6 +35,29 @@ $cats = array_count_values(array_column($all,'category'));
 $selectedMuni    = $_GET['muni'] ?? null;
 $muniAttractions = ($selectedMuni && isset($municipalities[$selectedMuni]))
                    ? $municipalities[$selectedMuni]['attractions'] : [];
+
+// Load location ranking data for predictions
+$locationRankingPath = 'api/location_ranking.csv';
+$locationRanking = [];
+if (file_exists($locationRankingPath)) {
+    if (($handle = fopen($locationRankingPath, 'r')) !== false) {
+        $headers = fgetcsv($handle);
+        while (($data = fgetcsv($handle)) !== false) {
+            if (count($data) >= 4) {
+                $locationRanking[] = [
+                    'location' => $data[0],
+                    'satisfaction' => floatval($data[1]),
+                    'review_count' => intval($data[2]),
+                    'avg_rating' => floatval($data[3])
+                ];
+            }
+        }
+        fclose($handle);
+    }
+}
+// Sort by satisfaction descending
+usort($locationRanking, fn($a, $b) => $b['satisfaction'] <=> $a['satisfaction']);
+$topPredictedMuni = array_slice($locationRanking, 0, 8);
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -42,6 +65,7 @@ $muniAttractions = ($selectedMuni && isset($municipalities[$selectedMuni]))
   <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
   <title>Admin Dashboard – VISTA-Rizal</title>
   <link rel="stylesheet" href="CSS\style.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.js"></script>
   <style>
     .muni-grid {
       display: grid;
@@ -88,6 +112,29 @@ $muniAttractions = ($selectedMuni && isset($municipalities[$selectedMuni]))
     .close-panel:hover { background:var(--bg); }
     @media(max-width:768px){ .dashboard-two-col{grid-template-columns:1fr!important;} .muni-grid{grid-template-columns:1fr 1fr;} }
     @media(max-width:480px){ .muni-grid{grid-template-columns:1fr;} }
+
+    .chart-container {
+      background: var(--card-bg); border-radius: 14px; box-shadow: var(--shadow);
+      padding: 22px; margin-bottom: 24px; position: relative;
+    }
+    .chart-wrapper {
+      position: relative; height: 300px; margin-bottom: 16px;
+    }
+    .chart-header {
+      font-size: 1.1rem; font-weight: 700; color: var(--text); margin-bottom: 16px;
+      display: flex; align-items: center; gap: 8px;
+    }
+    .prediction-section {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 24px;
+    }
+    @media(max-width:1024px){
+      .prediction-section { grid-template-columns: 1fr; }
+    }
+    .stat-badge {
+      display: inline-block; background: var(--primary); color: #fff;
+      padding: 2px 8px; border-radius: 4px; font-size: .75rem; font-weight: 600;
+      margin-left: 8px;
+    }
   </style>
 </head>
 <body<?= darkModeAttr() ?>>
@@ -108,6 +155,40 @@ $muniAttractions = ($selectedMuni && isset($municipalities[$selectedMuni]))
     <div class="stat-card red"><div class="stat-value"><?= $neg ?></div><div class="stat-label">Negative Reviews</div></div>
     <div class="stat-card"><div class="stat-value"><?= count($municipalities) ?></div><div class="stat-label">Municipalities</div></div>
   </div>
+
+  <!-- Predicted Top Municipalities Section -->
+  <?php if(!empty($locationRanking)): ?>
+  <div style="margin-bottom:16px;">
+    <h2 style="font-size:1.2rem;color:var(--text);">Top Predicted Municipalities Visualization</h2>
+  </div>
+  <div class="prediction-section">
+    <!-- Municipality Satisfaction Distribution Pie Chart -->
+    <div class="chart-container">
+      <div class="chart-header"> Municipality Satisfaction Distribution</div>
+      <div class="chart-wrapper">
+        <canvas id="satisfactionPieChart"></canvas>
+      </div>
+      <div style="font-size:.85rem;color:var(--text-muted);padding:8px 0;border-top:1px solid var(--border);margin-top:12px;padding-top:12px;">
+        <strong>Top Performers:</strong> 
+        <?php $top3 = array_slice($locationRanking, 0, 3); 
+              foreach($top3 as $idx => $m): ?>
+          <div><?= ($idx+1) ?>. <strong><?= htmlspecialchars($m['location']) ?></strong> - <?= round($m['satisfaction']*100) ?>%</div>
+        <?php endforeach; ?>
+      </div>
+    </div>
+
+    <!-- Municipality Ratings Bar Chart -->
+    <div class="chart-container">
+      <div class="chart-header"> Top Municipalities by Rating</div>
+      <div class="chart-wrapper">
+        <canvas id="ratingsBarChart"></canvas>
+      </div>
+      <div style="font-size:.85rem;color:var(--text-muted);padding:8px 0;border-top:1px solid var(--border);margin-top:12px;padding-top:12px;">
+        <strong>Data Points:</strong> Based on <?= count($locationRanking) ?> municipalities from predictive analytics
+      </div>
+    </div>
+  </div>
+  <?php endif; ?>
 
   <!-- Municipalities -->
   <div class="table-card" style="margin-bottom:24px;">
@@ -226,5 +307,135 @@ $muniAttractions = ($selectedMuni && isset($municipalities[$selectedMuni]))
     <a href="reports.php" class="btn-primary" style="display:inline-block;width:auto;padding:10px 24px;">Full Reports →</a>
   </div>
 </main>
+
+<script>
+<?php if(!empty($locationRanking)): ?>
+  // Prepare data for pie chart (Satisfaction Distribution)
+  const satisfactionData = <?= json_encode(array_map(fn($m) => round($m['satisfaction']*100, 1), $topPredictedMuni)) ?>;
+  const muniLabels = <?= json_encode(array_map(fn($m) => $m['location'], $topPredictedMuni)) ?>;
+  const colors = ['#10b981', '#3b82f6', '#f59e0b', '#ef4444', '#8b5cf6', '#ec4899', '#14b8a6', '#f97316'];
+
+  // Pie Chart - Satisfaction Distribution
+  const pieCtx = document.getElementById('satisfactionPieChart');
+  if (pieCtx) {
+    new Chart(pieCtx, {
+      type: 'doughnut',
+      data: {
+        labels: muniLabels,
+        datasets: [{
+          data: satisfactionData,
+          backgroundColor: colors,
+          borderColor: 'var(--card-bg)',
+          borderWidth: 2,
+          borderRadius: 6
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: {
+            position: 'right',
+            labels: {
+              color: 'var(--text)',
+              font: { size: 12, weight: '500' },
+              padding: 12,
+              usePointStyle: true,
+              pointStyle: 'circle'
+            }
+          },
+          tooltip: {
+            backgroundColor: 'rgba(0,0,0,0.8)',
+            padding: 10,
+            titleFont: { size: 13 },
+            bodyFont: { size: 12 },
+            callbacks: {
+              label: function(ctx) {
+                return ctx.label + ': ' + ctx.parsed + '%';
+              }
+            }
+          }
+        }
+      }
+    });
+  }
+
+  // Bar Chart - Top Municipalities by Rating and Satisfaction
+  const barCtx = document.getElementById('ratingsBarChart');
+  if (barCtx) {
+    const avgRatings = <?= json_encode(array_map(fn($m) => $m['avg_rating'], $topPredictedMuni)) ?>;
+    const reviewCounts = <?= json_encode(array_map(fn($m) => $m['review_count'], $topPredictedMuni)) ?>;
+    
+    new Chart(barCtx, {
+      type: 'bar',
+      data: {
+        labels: muniLabels,
+        datasets: [
+          {
+            label: 'Avg Rating (★)',
+            data: avgRatings,
+            backgroundColor: '#3b82f6',
+            borderRadius: 8,
+            borderSkipped: false,
+            yAxisID: 'y'
+          },
+          {
+            label: 'Review Count',
+            data: reviewCounts,
+            backgroundColor: '#10b981',
+            borderRadius: 8,
+            borderSkipped: false,
+            yAxisID: 'y1'
+          }
+        ]
+      },
+      options: {
+        indexAxis: 'x',
+        responsive: true,
+        maintainAspectRatio: false,
+        interaction: { mode: 'index', intersect: false },
+        plugins: {
+          legend: {
+            labels: {
+              color: 'var(--text)',
+              font: { size: 12, weight: '500' },
+              padding: 12,
+              usePointStyle: true
+            }
+          },
+          tooltip: {
+            backgroundColor: 'rgba(0,0,0,0.8)',
+            padding: 10,
+            titleFont: { size: 13 },
+            bodyFont: { size: 12 }
+          }
+        },
+        scales: {
+          y: {
+            type: 'linear',
+            display: true,
+            position: 'left',
+            title: { display: true, text: 'Rating (★)', color: 'var(--text)', font: { size: 11, weight: 'bold' } },
+            ticks: { color: 'var(--text-muted)', font: { size: 11 } },
+            grid: { color: 'var(--border)', drawBorder: false }
+          },
+          y1: {
+            type: 'linear',
+            display: true,
+            position: 'right',
+            title: { display: true, text: 'Review Count', color: 'var(--text)', font: { size: 11, weight: 'bold' } },
+            ticks: { color: 'var(--text-muted)', font: { size: 11 } },
+            grid: { drawOnChartArea: false }
+          },
+          x: {
+            ticks: { color: 'var(--text-muted)', font: { size: 11 } },
+            grid: { color: 'var(--border)', drawBorder: false }
+          }
+        }
+      }
+    });
+  }
+<?php endif; ?>
+</script>
 </body>
 </html>

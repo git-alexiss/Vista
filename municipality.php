@@ -38,9 +38,6 @@ $displayed  = $filterCat === 'all' ? $attractions
       <img src="<?= htmlspecialchars($cover) ?>" alt="<?= htmlspecialchars($muniName) ?>"
            onerror="this.src='images/placeholder.jpg'">
       <div class="muni-profile-cover-overlay"></div>
-    </div>
-    <div class="muni-profile-info">
-      <div class="muni-profile-avatar"><?= strtoupper(substr($muniName,0,1)) ?></div>
       <div class="muni-profile-text">
         <h1><?= htmlspecialchars($muniName) ?></h1>
         <p> Rizal Province &nbsp;·&nbsp;

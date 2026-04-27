@@ -184,22 +184,6 @@ usort($filteredMunis, fn($a,$b) => $sortBy === 'satisfaction'
     <?php endif; ?>
   </section>
 
-  <form method="GET" action="index.php" class="filters-bar">
-    <input type="text" name="q" placeholder="Search attractions or municipalities…"
-           value="<?= htmlspecialchars($searchQ) ?>">
-    <select name="cat">
-      <option value="all"      <?= $filterCat==='all'      ?'selected':'' ?>>All Categories</option>
-      <option value="nature"   <?= $filterCat==='nature'   ?'selected':'' ?>>Nature</option>
-      <option value="cultural" <?= $filterCat==='cultural' ?'selected':'' ?>>Cultural</option>
-      <option value="adventure"<?= $filterCat==='adventure'?'selected':'' ?>>Adventure</option>
-    </select>
-    <select name="sort">
-      <option value="rating"      <?= $sortBy==='rating'      ?'selected':'' ?>>Sort by Rating</option>
-      <option value="satisfaction"<?= $sortBy==='satisfaction'?'selected':'' ?>>Sort by Satisfaction</option>
-    </select>
-    <button type="submit" class="filters-search-btn">⌕ Search</button>
-  </form>
-
   <section style="margin-bottom:36px;">
     <div class="section-header">
       <h2>Explore Municipalities</h2>

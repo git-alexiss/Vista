@@ -41,7 +41,7 @@ $locationRankingPath = 'api/location_ranking.csv';
 $locationRanking = [];
 if (file_exists($locationRankingPath)) {
     if (($handle = fopen($locationRankingPath, 'r')) !== false) {
-        $headers = fgetcsv($handle);
+        fgetcsv($handle);
         while (($data = fgetcsv($handle)) !== false) {
             if (count($data) >= 4) {
                 $locationRanking[] = [
@@ -55,9 +55,99 @@ if (file_exists($locationRankingPath)) {
         fclose($handle);
     }
 }
-// Sort by satisfaction descending
 usort($locationRanking, fn($a, $b) => $b['satisfaction'] <=> $a['satisfaction']);
-$topPredictedMuni = array_slice($locationRanking, 0, 8);
+$topMuni = array_slice($locationRanking, 0, 8);
+
+// SVG Pie Chart generator
+function generatePieChart($data, $width = 300, $height = 300) {
+    if (empty($data)) return '';
+    
+    $total = array_sum(array_map(fn($d) => $d['satisfaction'] * 100, $data));
+    if ($total == 0) return '';
+    
+    $colors = ['#10b981', '#3b82f6', '#f59e0b', '#ef4444', '#8b5cf6', '#ec4899', '#14b8a6', '#f97316'];
+    $cx = $width / 2;
+    $cy = $height / 2;
+    $radius = min($cx, $cy) - 30;
+    
+    $svg = "<svg width='$width' height='$height' viewBox='0 0 $width $height'>";
+    $angle = -90;
+    
+    foreach ($data as $idx => $item) {
+        $value = $item['satisfaction'] * 100;
+        $sliceAngle = ($value / $total) * 360;
+        $endAngle = $angle + $sliceAngle;
+        
+        $startRad = deg2rad($angle);
+        $endRad = deg2rad($endAngle);
+        
+        $x1 = $cx + $radius * cos($startRad);
+        $y1 = $cy + $radius * sin($startRad);
+        $x2 = $cx + $radius * cos($endRad);
+        $y2 = $cy + $radius * sin($endRad);
+        
+        $largeArc = $sliceAngle > 180 ? 1 : 0;
+        
+        $color = $colors[$idx % count($colors)];
+        $svg .= "<path d='M $cx $cy L $x1 $y1 A $radius $radius 0 $largeArc 1 $x2 $y2 Z' fill='$color' stroke='var(--card-bg)' stroke-width='2'/>";
+        
+        $angle = $endAngle;
+    }
+    
+    $svg .= "</svg>";
+    return $svg;
+}
+
+// SVG Bar Chart generator
+function generateBarChart($data, $width = 400, $height = 250) {
+    if (empty($data)) return '';
+    
+    $maxRating = max(array_map(fn($d) => $d['avg_rating'], $data)) ?: 5;
+    $maxReviews = max(array_map(fn($d) => $d['review_count'], $data)) ?: 100;
+    
+    $barWidth = floor(($width - 60) / count($data));
+    $chartHeight = $height - 60;
+    
+    $svg = "<svg width='$width' height='$height' viewBox='0 0 $width $height' style='font-family:sans-serif;font-size:11px;'>";
+    
+    // Y-axis labels for ratings
+    $svg .= "<text x='35' y='15' font-size='10' fill='var(--text-muted)'>Rating</text>";
+    for ($i = 0; $i <= 5; $i++) {
+        $y = $height - 40 - ($i / 5) * $chartHeight;
+        $svg .= "<text x='8' y='" . ($y + 4) . "' text-anchor='end' fill='var(--text-muted)'>$i</text>";
+        $svg .= "<line x1='30' y1='$y' x2='$width' y2='$y' stroke='var(--border)' stroke-width='0.5' stroke-dasharray='2,2'/>";
+    }
+    
+    // Y-axis for reviews (right side)
+    $svg .= "<text x='" . ($width - 15) . "' y='15' font-size='10' fill='var(--text-muted)' text-anchor='end'>Reviews</text>";
+    
+    // X-axis
+    $svg .= "<line x1='30' y1='" . ($height - 40) . "' x2='$width' y2='" . ($height - 40) . "' stroke='var(--text-muted)' stroke-width='1'/>";
+    
+    $x = 40;
+    foreach ($data as $idx => $item) {
+        $ratingHeight = ($item['avg_rating'] / 5) * $chartHeight;
+        $reviewHeight = ($item['review_count'] / $maxReviews) * ($chartHeight * 0.7);
+        
+        // Rating bar (blue)
+        $y = $height - 40 - $ratingHeight;
+        $svg .= "<rect x='" . ($x + 2) . "' y='$y' width='" . ($barWidth / 2 - 3) . "' height='$ratingHeight' fill='#3b82f6' opacity='0.8'/>";
+        
+        // Review bar (green)
+        $y2 = $height - 40 - $reviewHeight;
+        $svg .= "<rect x='" . ($x + $barWidth / 2 + 1) . "' y='$y2' width='" . ($barWidth / 2 - 3) . "' height='$reviewHeight' fill='#10b981' opacity='0.8'/>";
+        
+        // Label
+        $label = substr($item['location'], 0, 3);
+        $svg .= "<text x='" . ($x + $barWidth / 2) . "' y='" . ($height - 22) . "' text-anchor='middle' fill='var(--text)'>$label</text>";
+        
+        $x += $barWidth;
+    }
+    
+    $svg .= "</svg>";
+    return $svg;
+}
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -65,7 +155,6 @@ $topPredictedMuni = array_slice($locationRanking, 0, 8);
   <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
   <title>Admin Dashboard – VISTA-Rizal</title>
   <link rel="stylesheet" href="CSS\style.css">
-  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.js"></script>
   <style>
     .muni-grid {
       display: grid;
@@ -112,29 +201,30 @@ $topPredictedMuni = array_slice($locationRanking, 0, 8);
     .close-panel:hover { background:var(--bg); }
     @media(max-width:768px){ .dashboard-two-col{grid-template-columns:1fr!important;} .muni-grid{grid-template-columns:1fr 1fr;} }
     @media(max-width:480px){ .muni-grid{grid-template-columns:1fr;} }
-
+    
     .chart-container {
       background: var(--card-bg); border-radius: 14px; box-shadow: var(--shadow);
-      padding: 22px; margin-bottom: 24px; position: relative;
+      padding: 22px; margin-bottom: 24px;
     }
-    .chart-wrapper {
-      position: relative; height: 300px; margin-bottom: 16px;
+    .chart-grid {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 24px;
     }
     .chart-header {
       font-size: 1.1rem; font-weight: 700; color: var(--text); margin-bottom: 16px;
-      display: flex; align-items: center; gap: 8px;
     }
-    .prediction-section {
-      display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 24px;
+    .chart-wrapper {
+      display: flex; justify-content: center; align-items: center; min-height: 300px;
     }
-    @media(max-width:1024px){
-      .prediction-section { grid-template-columns: 1fr; }
+    .chart-legend {
+      font-size: 0.85rem; color: var(--text-muted); margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--border);
     }
-    .stat-badge {
-      display: inline-block; background: var(--primary); color: #fff;
-      padding: 2px 8px; border-radius: 4px; font-size: .75rem; font-weight: 600;
-      margin-left: 8px;
+    .legend-item {
+      display: flex; align-items: center; gap: 8px; margin: 4px 0;
     }
+    .legend-color {
+      width: 16px; height: 16px; border-radius: 2px;
+    }
+    @media(max-width:1024px){ .chart-grid { grid-template-columns: 1fr; } }
   </style>
 </head>
 <body<?= darkModeAttr() ?>>
@@ -156,35 +246,44 @@ $topPredictedMuni = array_slice($locationRanking, 0, 8);
     <div class="stat-card"><div class="stat-value"><?= count($municipalities) ?></div><div class="stat-label">Municipalities</div></div>
   </div>
 
-  <!-- Predicted Top Municipalities Section -->
-  <?php if(!empty($locationRanking)): ?>
-  <div style="margin-bottom:16px;">
-    <h2 style="font-size:1.2rem;color:var(--text);">Top Predicted Municipalities Visualization</h2>
-  </div>
-  <div class="prediction-section">
-    <!-- Municipality Satisfaction Distribution Pie Chart -->
-    <div class="chart-container">
-      <div class="chart-header"> Municipality Satisfaction Distribution</div>
-      <div class="chart-wrapper">
-        <canvas id="satisfactionPieChart"></canvas>
+  <!-- Prediction Charts Section -->
+  <?php if (!empty($topMuni)): ?>
+  <div style="margin-bottom: 24px;">
+    <h2 style="font-size: 1.2rem; color: var(--text); margin-bottom: 20px;">Municipality Prediction Analytics</h2>
+    <div class="chart-grid">
+      <!-- Pie Chart -->
+      <div class="chart-container">
+        <div class="chart-header">Satisfaction Distribution</div>
+        <div class="chart-wrapper">
+          <?= generatePieChart($topMuni, 320, 300) ?>
+        </div>
+        <div class="chart-legend">
+          <strong>Top Performers:</strong>
+          <?php foreach (array_slice($topMuni, 0, 3) as $idx => $m): ?>
+            <div class="legend-item">
+              <span><?= ($idx + 1) ?>. <?= htmlspecialchars($m['location']) ?> - <?= round($m['satisfaction'] * 100) ?>%</span>
+            </div>
+          <?php endforeach; ?>
+        </div>
       </div>
-      <div style="font-size:.85rem;color:var(--text-muted);padding:8px 0;border-top:1px solid var(--border);margin-top:12px;padding-top:12px;">
-        <strong>Top Performers:</strong> 
-        <?php $top3 = array_slice($locationRanking, 0, 3); 
-              foreach($top3 as $idx => $m): ?>
-          <div><?= ($idx+1) ?>. <strong><?= htmlspecialchars($m['location']) ?></strong> - <?= round($m['satisfaction']*100) ?>%</div>
-        <?php endforeach; ?>
-      </div>
-    </div>
 
-    <!-- Municipality Ratings Bar Chart -->
-    <div class="chart-container">
-      <div class="chart-header"> Top Municipalities by Rating</div>
-      <div class="chart-wrapper">
-        <canvas id="ratingsBarChart"></canvas>
-      </div>
-      <div style="font-size:.85rem;color:var(--text-muted);padding:8px 0;border-top:1px solid var(--border);margin-top:12px;padding-top:12px;">
-        <strong>Data Points:</strong> Based on <?= count($locationRanking) ?> municipalities from predictive analytics
+      <!-- Bar Chart -->
+      <div class="chart-container">
+        <div class="chart-header">Ratings vs Review Count</div>
+        <div class="chart-wrapper">
+          <?= generateBarChart($topMuni, 420, 300) ?>
+        </div>
+        <div class="chart-legend">
+          <div class="legend-item">
+            <div class="legend-color" style="background: #3b82f6;"></div>
+            <span>Avg Rating (★)</span>
+          </div>
+          <div class="legend-item">
+            <div class="legend-color" style="background: #10b981;"></div>
+            <span>Review Count</span>
+          </div>
+          <div style="margin-top: 8px; font-size: 0.8rem;">Based on <?= count($locationRanking) ?> municipalities</div>
+        </div>
       </div>
     </div>
   </div>
@@ -307,135 +406,5 @@ $topPredictedMuni = array_slice($locationRanking, 0, 8);
     <a href="reports.php" class="btn-primary" style="display:inline-block;width:auto;padding:10px 24px;">Full Reports →</a>
   </div>
 </main>
-
-<script>
-<?php if(!empty($locationRanking)): ?>
-  // Prepare data for pie chart (Satisfaction Distribution)
-  const satisfactionData = <?= json_encode(array_map(fn($m) => round($m['satisfaction']*100, 1), $topPredictedMuni)) ?>;
-  const muniLabels = <?= json_encode(array_map(fn($m) => $m['location'], $topPredictedMuni)) ?>;
-  const colors = ['#10b981', '#3b82f6', '#f59e0b', '#ef4444', '#8b5cf6', '#ec4899', '#14b8a6', '#f97316'];
-
-  // Pie Chart - Satisfaction Distribution
-  const pieCtx = document.getElementById('satisfactionPieChart');
-  if (pieCtx) {
-    new Chart(pieCtx, {
-      type: 'doughnut',
-      data: {
-        labels: muniLabels,
-        datasets: [{
-          data: satisfactionData,
-          backgroundColor: colors,
-          borderColor: 'var(--card-bg)',
-          borderWidth: 2,
-          borderRadius: 6
-        }]
-      },
-      options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        plugins: {
-          legend: {
-            position: 'right',
-            labels: {
-              color: 'var(--text)',
-              font: { size: 12, weight: '500' },
-              padding: 12,
-              usePointStyle: true,
-              pointStyle: 'circle'
-            }
-          },
-          tooltip: {
-            backgroundColor: 'rgba(0,0,0,0.8)',
-            padding: 10,
-            titleFont: { size: 13 },
-            bodyFont: { size: 12 },
-            callbacks: {
-              label: function(ctx) {
-                return ctx.label + ': ' + ctx.parsed + '%';
-              }
-            }
-          }
-        }
-      }
-    });
-  }
-
-  // Bar Chart - Top Municipalities by Rating and Satisfaction
-  const barCtx = document.getElementById('ratingsBarChart');
-  if (barCtx) {
-    const avgRatings = <?= json_encode(array_map(fn($m) => $m['avg_rating'], $topPredictedMuni)) ?>;
-    const reviewCounts = <?= json_encode(array_map(fn($m) => $m['review_count'], $topPredictedMuni)) ?>;
-    
-    new Chart(barCtx, {
-      type: 'bar',
-      data: {
-        labels: muniLabels,
-        datasets: [
-          {
-            label: 'Avg Rating (★)',
-            data: avgRatings,
-            backgroundColor: '#3b82f6',
-            borderRadius: 8,
-            borderSkipped: false,
-            yAxisID: 'y'
-          },
-          {
-            label: 'Review Count',
-            data: reviewCounts,
-            backgroundColor: '#10b981',
-            borderRadius: 8,
-            borderSkipped: false,
-            yAxisID: 'y1'
-          }
-        ]
-      },
-      options: {
-        indexAxis: 'x',
-        responsive: true,
-        maintainAspectRatio: false,
-        interaction: { mode: 'index', intersect: false },
-        plugins: {
-          legend: {
-            labels: {
-              color: 'var(--text)',
-              font: { size: 12, weight: '500' },
-              padding: 12,
-              usePointStyle: true
-            }
-          },
-          tooltip: {
-            backgroundColor: 'rgba(0,0,0,0.8)',
-            padding: 10,
-            titleFont: { size: 13 },
-            bodyFont: { size: 12 }
-          }
-        },
-        scales: {
-          y: {
-            type: 'linear',
-            display: true,
-            position: 'left',
-            title: { display: true, text: 'Rating (★)', color: 'var(--text)', font: { size: 11, weight: 'bold' } },
-            ticks: { color: 'var(--text-muted)', font: { size: 11 } },
-            grid: { color: 'var(--border)', drawBorder: false }
-          },
-          y1: {
-            type: 'linear',
-            display: true,
-            position: 'right',
-            title: { display: true, text: 'Review Count', color: 'var(--text)', font: { size: 11, weight: 'bold' } },
-            ticks: { color: 'var(--text-muted)', font: { size: 11 } },
-            grid: { drawOnChartArea: false }
-          },
-          x: {
-            ticks: { color: 'var(--text-muted)', font: { size: 11 } },
-            grid: { color: 'var(--border)', drawBorder: false }
-          }
-        }
-      }
-    });
-  }
-<?php endif; ?>
-</script>
 </body>
 </html>

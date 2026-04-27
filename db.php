@@ -1,16 +1,16 @@
 <?php
 // ─── db.php ──────────────────────────────────────────────────────────────────
 //  Database connection + all data functions for VISTA-Rizal
-//  Requires: vista_rizal.sql imported in phpMyAdmin
+//  Single database: vista_rizal_new
 // ─────────────────────────────────────────────────────────────────────────────
 
 define('DB_HOST', 'localhost');
-define('DB_NAME', 'vista_rizal');
+define('DB_NAME', 'vista_rizal_new');   // ← sole database
 define('DB_USER', 'root');
-define('DB_PASS', '');   // XAMPP default — change if you set a password
-define('DB_PORT', 3308);
+define('DB_PASS', '');                  // XAMPP default — change if you set a password
+define('DB_PORT', 3307);
 
-// ─── PDO Singleton ───────────────────────────────────────────────────────────
+// ─── PDO Singleton ────────────────────────────────────────────────────────────
 function getDB(): PDO {
     static $db = null;
     if ($db !== null) return $db;
@@ -34,8 +34,8 @@ function getDB(): PDO {
             <p style="color:#555;margin-bottom:12px;">Please check the following:</p>
             <ul style="text-align:left;color:#555;line-height:2.2;margin:0 auto;max-width:320px;">
                 <li>XAMPP → MySQL is <strong>running</strong></li>
-                <li>Database name: <strong>vista_rizal</strong></li>
-                <li><strong>vista_rizal.sql</strong> was imported in phpMyAdmin</li>
+                <li>Database name: <strong>vista_rizal_new</strong></li>
+                <li><strong>vista_rizal_new.sql</strong> was imported in phpMyAdmin</li>
                 <li>DB_USER / DB_PASS in <strong>db.php</strong> are correct</li>
             </ul>
             <p style="margin-top:16px;font-size:.82rem;color:#aaa;">Error: '.htmlspecialchars($e->getMessage()).'</p>
@@ -45,11 +45,11 @@ function getDB(): PDO {
     return $db;
 }
 
+
 // ═══════════════════════════════════════════════════════════════════════════════
 //  USER FUNCTIONS
 // ═══════════════════════════════════════════════════════════════════════════════
 
-/** Find a user by email. Returns row array or null. */
 function getUserByEmail(string $email): ?array {
     $stmt = getDB()->prepare(
         'SELECT * FROM users WHERE email = ? AND is_active = 1 LIMIT 1'
@@ -58,7 +58,6 @@ function getUserByEmail(string $email): ?array {
     return $stmt->fetch() ?: null;
 }
 
-/** Find a user by ID. Returns row array or null. */
 function getUserById(int $id): ?array {
     $stmt = getDB()->prepare(
         'SELECT * FROM users WHERE id = ? AND is_active = 1 LIMIT 1'
@@ -67,28 +66,20 @@ function getUserById(int $id): ?array {
     return $stmt->fetch() ?: null;
 }
 
-/**
- * Verify email + password using password_verify().
- * Returns user array on success, null on failure.
- */
 function verifyUserPassword(string $email, string $password): ?array {
     $user = getUserByEmail($email);
-    if (!$user)                                          return null;
-    if (($user['oauth_provider'] ?? 'local') !== 'local') return null;
+    if (!$user)                                               return null;
+    if (($user['oauth_provider'] ?? 'local') !== 'local')    return null;
     if (!password_verify($password, $user['password_hash'])) return null;
     return $user;
 }
 
-/**
- * Register a new local user with a bcrypt-hashed password.
- * Returns new user ID, or false if email already exists.
- */
 function registerUser(array $data): int|false {
     $db = getDB();
 
     $check = $db->prepare('SELECT id FROM users WHERE email = ? LIMIT 1');
     $check->execute([strtolower(trim($data['email']))]);
-    if ($check->fetch()) return false; // duplicate email
+    if ($check->fetch()) return false;
 
     $hash = password_hash($data['password'], PASSWORD_BCRYPT, ['cost' => 12]);
 
@@ -98,7 +89,7 @@ function registerUser(array $data): int|false {
         VALUES (?, ?, ?, ?, ?, ?, ?, "local")
     ');
     $stmt->execute([
-        htmlspecialchars(trim($data['name']),        ENT_QUOTES, 'UTF-8'),
+        htmlspecialchars(trim($data['name']),                 ENT_QUOTES, 'UTF-8'),
         strtolower(trim($data['email'])),
         $hash,
         $data['role']        ?? 'tourist',
@@ -110,17 +101,12 @@ function registerUser(array $data): int|false {
     return (int) $db->lastInsertId();
 }
 
-/**
- * Save or update a Google / Facebook OAuth user.
- * Returns full user array.
- */
 function upsertOAuthUser(
     string $provider, string $oauthId,
     string $name, string $email, ?string $avatarUrl = null
 ): array {
     $db = getDB();
 
-    // 1. Find by OAuth provider + ID
     $stmt = $db->prepare('SELECT * FROM users WHERE oauth_provider=? AND oauth_id=? LIMIT 1');
     $stmt->execute([$provider, $oauthId]);
     $user = $stmt->fetch();
@@ -130,7 +116,6 @@ function upsertOAuthUser(
         return array_merge($user, ['name'=>$name,'avatar_url'=>$avatarUrl]);
     }
 
-    // 2. Find by email
     $stmt = $db->prepare('SELECT * FROM users WHERE email=? LIMIT 1');
     $stmt->execute([strtolower(trim($email))]);
     $user = $stmt->fetch();
@@ -140,7 +125,6 @@ function upsertOAuthUser(
         return array_merge($user, ['oauth_provider'=>$provider,'oauth_id'=>$oauthId]);
     }
 
-    // 3. New OAuth user
     $db->prepare('
         INSERT INTO users (name,email,password_hash,role,nationality,address,oauth_provider,oauth_id,avatar_url)
         VALUES (?,?,"","tourist","N/A","N/A",?,?,?)
@@ -149,7 +133,6 @@ function upsertOAuthUser(
     return getUserById((int) $db->lastInsertId());
 }
 
-/** Change a user's password. */
 function changePassword(int $userId, string $newPassword): bool {
     $hash = password_hash($newPassword, PASSWORD_BCRYPT, ['cost' => 12]);
     return getDB()->prepare(
@@ -157,7 +140,6 @@ function changePassword(int $userId, string $newPassword): bool {
     )->execute([$hash, $userId]);
 }
 
-/** Build a clean session array from a DB row. */
 function buildSessionUser(array $row): array {
     return [
         'id'          => (int)$row['id'],
@@ -172,11 +154,11 @@ function buildSessionUser(array $row): array {
     ];
 }
 
+
 // ═══════════════════════════════════════════════════════════════════════════════
 //  ATTRACTION FUNCTIONS
 // ═══════════════════════════════════════════════════════════════════════════════
 
-/** Get all active attractions (with municipality name joined). */
 function getAttractions(): array {
     $stmt = getDB()->prepare('
         SELECT a.*, m.name AS municipality
@@ -189,7 +171,6 @@ function getAttractions(): array {
     return $stmt->fetchAll();
 }
 
-/** Get a single attraction by ID. */
 function getAttractionById(int $id): ?array {
     $stmt = getDB()->prepare('
         SELECT a.*, m.name AS municipality
@@ -201,7 +182,6 @@ function getAttractionById(int $id): ?array {
     return $stmt->fetch() ?: null;
 }
 
-/** Top-rated attractions (for Popular page). */
 function getPopularAttractions(int $limit = 6): array {
     $stmt = getDB()->prepare('
         SELECT a.*, m.name AS municipality
@@ -215,10 +195,6 @@ function getPopularAttractions(int $limit = 6): array {
     return $stmt->fetchAll();
 }
 
-/**
- * Get the average rating for an attraction from the reviews table.
- * Returns a formatted float (e.g. 4.5) or null if no reviews exist.
- */
 function getAttractionRating(int $attractionId): ?float {
     $stmt = getDB()->prepare('
         SELECT ROUND(AVG(rating), 1) AS avg_rating
@@ -230,7 +206,6 @@ function getAttractionRating(int $attractionId): ?float {
     return ($result !== null && $result !== false) ? (float) $result : null;
 }
 
-/** Recommended = top-rated excluding already-viewed. */
 function getRecommendations(array $viewedIds = [], int $limit = 6): array {
     if (empty($viewedIds)) return getPopularAttractions($limit);
 
@@ -247,7 +222,6 @@ function getRecommendations(array $viewedIds = [], int $limit = 6): array {
     return $stmt->fetchAll();
 }
 
-/** Full-text search across name, category, municipality, fact. */
 function searchAttractions(string $query): array {
     $q = '%' . trim($query) . '%';
     $stmt = getDB()->prepare('
@@ -262,18 +236,18 @@ function searchAttractions(string $query): array {
     return $stmt->fetchAll();
 }
 
+
 // ═══════════════════════════════════════════════════════════════════════════════
 //  REVIEW FUNCTIONS
 // ═══════════════════════════════════════════════════════════════════════════════
 
-/** Get reviews for a specific attraction (or all if null). */
 function getReviews(?int $attractionId = null): array {
     if ($attractionId === null) {
         $stmt = getDB()->prepare('
             SELECT r.*, u.name AS user, a.name AS attraction_name
             FROM   reviews r
-            JOIN   users u        ON r.user_id       = u.id
-            JOIN   attractions a  ON r.attraction_id = a.id
+            JOIN   users u       ON r.user_id       = u.id
+            JOIN   attractions a ON r.attraction_id = a.id
             ORDER  BY r.created_at DESC
         ');
         $stmt->execute();
@@ -290,7 +264,6 @@ function getReviews(?int $attractionId = null): array {
     return $stmt->fetchAll();
 }
 
-/** Add a review (saves to DB). */
 function addReview(int $attractionId, int $userId, int $rating, string $text): bool {
     $sentiment = classifyReview($text);
     $stmt = getDB()->prepare('
@@ -300,15 +273,121 @@ function addReview(int $attractionId, int $userId, int $rating, string $text): b
             rating=VALUES(rating), review_text=VALUES(review_text),
             sentiment=VALUES(sentiment), created_at=NOW()
     ');
-    return $stmt->execute([$attractionId, $userId, $rating,
-                           htmlspecialchars($text, ENT_QUOTES, 'UTF-8'), $sentiment]);
+    return $stmt->execute([
+        $attractionId, $userId, $rating,
+        htmlspecialchars($text, ENT_QUOTES, 'UTF-8'),
+        $sentiment,
+    ]);
 }
+
+
+// ═══════════════════════════════════════════════════════════════════════════════
+//  TOURIST INSIGHTS FUNCTIONS
+// ═══════════════════════════════════════════════════════════════════════════════
+
+function getInsightsMunicipalities(): array {
+    $stmt = getDB()->prepare(
+        'SELECT * FROM municipalities_insights ORDER BY name'
+    );
+    $stmt->execute();
+    return $stmt->fetchAll();
+}
+
+function getTouristInsights(?string $location = null, int $limit = 500): array {
+    if ($location) {
+        $sql  = 'SELECT * FROM tourist_insights WHERE location_name = ? ORDER BY id';
+        $sql .= $limit > 0 ? " LIMIT $limit" : '';
+        $stmt = getDB()->prepare($sql);
+        $stmt->execute([$location]);
+    } else {
+        $sql  = 'SELECT * FROM tourist_insights ORDER BY id';
+        $sql .= $limit > 0 ? " LIMIT $limit" : '';
+        $stmt = getDB()->prepare($sql);
+        $stmt->execute();
+    }
+    return $stmt->fetchAll();
+}
+
+function getLocationSummary(?string $location = null): array {
+    if ($location) {
+        $stmt = getDB()->prepare(
+            'SELECT * FROM location_summary WHERE location_name = ? LIMIT 1'
+        );
+        $stmt->execute([$location]);
+        return [$stmt->fetch() ?: []];
+    }
+    $stmt = getDB()->prepare(
+        'SELECT * FROM location_summary ORDER BY avg_rating DESC'
+    );
+    $stmt->execute();
+    return $stmt->fetchAll();
+}
+
+function getRatingDistribution(?string $location = null): array {
+    if ($location) {
+        $stmt = getDB()->prepare(
+            'SELECT rating, COUNT(*) AS count
+             FROM   tourist_insights
+             WHERE  location_name = ?
+             GROUP  BY rating ORDER BY rating DESC'
+        );
+        $stmt->execute([$location]);
+    } else {
+        $stmt = getDB()->prepare(
+            'SELECT rating, COUNT(*) AS count
+             FROM   tourist_insights
+             GROUP  BY rating ORDER BY rating DESC'
+        );
+        $stmt->execute();
+    }
+    return $stmt->fetchAll();
+}
+
+function getSatisfactionBreakdown(?string $location = null): array {
+    $labelMap = [1 => 'Satisfied', 2 => 'Unsatisfied'];
+
+    if ($location) {
+        $stmt = getDB()->prepare(
+            'SELECT satisfaction_label, COUNT(*) AS count
+             FROM   tourist_insights
+             WHERE  location_name = ?
+             GROUP  BY satisfaction_label ORDER BY satisfaction_label'
+        );
+        $stmt->execute([$location]);
+    } else {
+        $stmt = getDB()->prepare(
+            'SELECT satisfaction_label, COUNT(*) AS count
+             FROM   tourist_insights
+             GROUP  BY satisfaction_label ORDER BY satisfaction_label'
+        );
+        $stmt->execute();
+    }
+
+    $rows = $stmt->fetchAll();
+    foreach ($rows as &$r) {
+        $r['label_text'] = $labelMap[$r['satisfaction_label']] ?? 'Unknown';
+    }
+    return $rows;
+}
+
+function getInsightsOverallStats(): array {
+    $stmt = getDB()->prepare('
+        SELECT
+            COUNT(*)                                          AS total,
+            ROUND(AVG(rating),          2)                   AS avg_rating,
+            ROUND(AVG(sentiment_score), 4)                   AS avg_sentiment,
+            ROUND(SUM(satisfaction_label=1)/COUNT(*)*100, 1) AS satisfaction_rate
+        FROM tourist_insights
+    ');
+    $stmt->execute();
+    return $stmt->fetch() ?: [];
+}
+
 
 // ═══════════════════════════════════════════════════════════════════════════════
 //  RECENTLY VIEWED
 // ═══════════════════════════════════════════════════════════════════════════════
 
-/** Record a page view (upsert). */
 function recordView(int $userId, int $attractionId): void {
     getDB()->prepare('
         INSERT INTO recently_viewed (user_id, attraction_id)
@@ -317,7 +396,6 @@ function recordView(int $userId, int $attractionId): void {
     ')->execute([$userId, $attractionId]);
 }
 
-/** Get recently viewed attraction IDs for a user. */
 function getRecentlyViewedIds(int $userId, int $limit = 10): array {
     $stmt = getDB()->prepare('
         SELECT attraction_id FROM recently_viewed
@@ -329,8 +407,9 @@ function getRecentlyViewedIds(int $userId, int $limit = 10): array {
     return array_column($stmt->fetchAll(), 'attraction_id');
 }
 
+
 // ═══════════════════════════════════════════════════════════════════════════════
-//  LOGIN ATTEMPT TRACKING (IP-based, stored in DB)
+//  LOGIN ATTEMPT TRACKING
 // ═══════════════════════════════════════════════════════════════════════════════
 
 function getClientIP(): string {

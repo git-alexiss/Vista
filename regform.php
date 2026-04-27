@@ -101,7 +101,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     .error-message a{color:#c53030;font-weight:600}
   </style>
 </head>
-<body>
+<body<?= darkModeAttr() ?>>
 <div class="auth-container">
   <div class="auth-card">
     <div class="logo-section">

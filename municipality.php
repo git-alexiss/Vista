@@ -23,13 +23,13 @@ $displayed  = $filterCat === 'all' ? $attractions
     : array_values(array_filter($attractions, fn($a)=>$a['category']===$filterCat));
 ?>
 <!DOCTYPE html>
-<html lang="en"<?= darkModeAttr() ?>>
+<html lang="en">
 <head>
   <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
   <title><?= htmlspecialchars($muniName) ?> – VISTA-Rizal</title>
   <link rel="stylesheet" href="CSS\style.css">
 </head>
-<body>
+<body<?= darkModeAttr() ?>>
 <?= renderNav('attractions') ?>
 <main class="container">
 
@@ -103,5 +103,12 @@ $displayed  = $filterCat === 'all' ? $attractions
   </div>
 </main>
 <div class="footer">Tourist Satisfaction Prediction System · Province of Rizal</div>
+<script>
+window.addEventListener('DOMContentLoaded', function() {
+  if (document.body.classList.contains('dark-mode')) {
+    document.body.style.opacity = '1';
+  }
+});
+</script>
 </body>
 </html>

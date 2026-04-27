@@ -36,7 +36,7 @@ $user = $_SESSION['pending_user'];
   <title>VISTA-Rizal – Review Registration</title>
   <link rel="stylesheet" href="CSS\style.css">
 </head>
-<body>
+<body<?= darkModeAttr() ?>>
 <div class="auth-container">
   <div class="auth-card">
     <div class="logo-section">

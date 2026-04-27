@@ -60,14 +60,14 @@ usort($filteredMunis, fn($a,$b) => $sortBy === 'satisfaction'
 );
 ?>
 <!DOCTYPE html>
-<html lang="en"<?= darkModeAttr() ?>>
+<html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>VISTA-Rizal – Explore</title>
   <link rel="stylesheet" href="CSS\style.css">
 </head>
-<body>
+<body<?= darkModeAttr() ?>>
 <?= renderNav('home') ?>
 
 <main class="container">
@@ -220,5 +220,12 @@ usort($filteredMunis, fn($a,$b) => $sortBy === 'satisfaction'
 
 </main>
 <div class="footer">Tourist Satisfaction Prediction System · Province of Rizal</div>
+<script>
+window.addEventListener('DOMContentLoaded', function() {
+  if (document.body.classList.contains('dark-mode')) {
+    document.body.style.opacity = '1';
+  }
+});
+</script>
 </body>
 </html>

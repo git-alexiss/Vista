@@ -16,7 +16,7 @@ if ($catFilter && $catFilter!=='all') {
   <title>Search – VISTA-Rizal</title>
   <link rel="stylesheet" href="CSS\style.css">
 </head>
-<body>
+<body<?= darkModeAttr() ?>>
 <?= renderNav() ?>
 <main class="container">
   <div class="search-hero">

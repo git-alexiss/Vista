@@ -80,13 +80,13 @@ if (!array_key_exists($tab, $tabs)) $tab = 'preferences';
 $isDark = !empty($s['dark_mode']);
 ?>
 <!DOCTYPE html>
-<html lang="en"<?= darkModeAttr() ?>>
+<html lang="en">
 <head>
   <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
   <title>Settings – VISTA-Rizal</title>
-  <link rel="stylesheet" href="CSS\style.css">
+  <link rel="stylesheet" href="/Vista/style.css">
 </head>
-<body>
+<body<?= darkModeAttr() ?>>
 <?= renderNav('') ?>
 <main class="container">
   <h1 style="font-size:1.6rem;margin-bottom:20px;"> Settings</h1>
@@ -160,7 +160,7 @@ $isDark = !empty($s['dark_mode']);
             <label class="toggle">
               <input type="checkbox" name="dark_mode" id="darkModeToggle"
                      <?= $isDark?'checked':'' ?>
-                     onchange="previewDarkMode(this.checked)">
+                     onchange="toggleDarkMode(this)">
               <span class="toggle-slider"></span>
             </label>
           </div>
@@ -281,24 +281,38 @@ $isDark = !empty($s['dark_mode']);
 </main>
 
 <script>
-function previewDarkMode(on) {
-  document.documentElement.setAttribute('data-theme', on ? 'dark' : '');
+function toggleDarkMode(checkbox) {
+  const on = checkbox.checked;
+  
+  // Apply immediately to DOM
+  document.body.classList.toggle('dark-mode', on);
+  document.documentElement.classList.toggle('dark-mode', on);
+  
+  // Set cookie for backup persistence
+  document.cookie = 'dark_mode=' + (on ? '1' : '0') + '; path=/; max-age=31536000; SameSite=Lax';
+  
+  // Auto-submit via AJAX to save to session
+  const form = document.querySelector('form[action*="settings"]') || checkbox.closest('form');
+  if (form) {
+    const formData = new FormData(form);
+    
+    fetch(form.action || 'settings.php', {
+      method: 'POST',
+      body: formData
+    })
+    .then(() => {
+      console.log('Dark mode preference saved');
+    })
+    .catch(err => console.error('Error saving preference:', err));
+  }
 }
-</script>
 
-<style>
-[data-theme="dark"] {
-  --bg: #1a1a2e; --card-bg: #16213e; --text: #e0e0e0;
-  --text-muted: #9a9ab0; --border: #2d2d4e;
-  --shadow: 0 2px 12px rgba(0,0,0,.4); --green-pale: rgba(52,211,153,.08);
-}
-[data-theme="dark"] body { background: var(--bg); color: var(--text); }
-[data-theme="dark"] .main-nav { background: var(--card-bg); border-bottom-color: var(--border); }
-[data-theme="dark"] .card, [data-theme="dark"] .settings-panel,
-[data-theme="dark"] .settings-sidebar { background: var(--card-bg); }
-[data-theme="dark"] input, [data-theme="dark"] select, [data-theme="dark"] textarea {
-  background: #0f3460; color: var(--text); border-color: var(--border);
-}
-</style>
+// Apply dark mode on page load if setting is enabled
+window.addEventListener('DOMContentLoaded', function() {
+  if (document.body.classList.contains('dark-mode')) {
+    // Already applied by server, no need to do anything
+  }
+});
+</script>
 </body>
 </html>

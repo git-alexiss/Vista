@@ -123,7 +123,22 @@ function isOpen($hours): string {
 }
 
 function darkModeAttr(): string {
-    return !empty($_SESSION['settings']['dark_mode']) ? ' data-theme="dark"' : '';
+    $settings = $_SESSION['settings'] ?? [];
+
+    if (isset($settings['dark_mode'])) {
+        $dark = (bool)$settings['dark_mode'];
+    } else {
+        // Check cookie as fallback
+        $dark = isset($_COOKIE['dark_mode']) && $_COOKIE['dark_mode'] === '1';
+    }
+    
+    // Always set the session setting from the cookie/preference
+    if (!isset($_SESSION['settings'])) {
+        $_SESSION['settings'] = [];
+    }
+    $_SESSION['settings']['dark_mode'] = $dark;
+
+    return $dark ? ' class="dark-mode"' : '';
 }
 
 // ─── Navigation ───────────────────────────────────────────────────────────────
@@ -180,6 +195,18 @@ function renderNav($activePage='') {
   </div>
 </nav>
 <script>
+function previewDarkMode(on) {
+  document.body.classList.toggle('dark-mode', on);
+  document.cookie = 'dark_mode=' + (on ? '1' : '0') + '; path=/; max-age=31536000; SameSite=Lax';
+}
+(function(){
+  var isDark = <?= !empty(($_SESSION['settings'] ?? [])['dark_mode']) ? 'true' : 'false' ?>;
+  if (!isDark) {
+    isDark = document.cookie.split(';').some(function(c){ return c.trim() === 'dark_mode=1'; });
+  }
+  if (isDark) document.body.classList.add('dark-mode');
+  
+})();
 (function(){
   const wrap=document.getElementById('navDropdownWrap'),
         btn=document.getElementById('hamburgerBtn'),
@@ -263,7 +290,7 @@ function renderNav($activePage='') {
           <label class="toggle">
             <input type="checkbox" name="dark_mode" id="modalDarkToggle"
                    <?= $isDark?'checked':'' ?>
-                   onchange="previewDarkMode(this.checked)">
+                  onchange="previewDarkMode(this.checked); this.form.submit();">
             <span class="toggle-slider"></span>
           </label>
         </div>

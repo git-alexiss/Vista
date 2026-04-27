@@ -6,6 +6,9 @@
   --primary:       #003566;
   --primary-light: #004d95;
   --primary-pale:  #8aa9c8;
+  --blue:          #1b4332;
+  --blue-pale:     #c9b8e8;
+  --blue-light:    #b7dfc0;
   --secondary:        #edc600;
   --secondary-dark:   #deaa00;
   --red:         #e63946;
@@ -163,7 +166,7 @@ img  { max-width: 100%; display: block; }
   font-size: 1rem; font-weight: 700; cursor: pointer; text-align: center;
   transition: background .2s, transform .1s;
 }
-.login-btn:hover, .btn-primary:hover { background: #1b4332; transform: translateY(-1px); }
+.login-btn:hover, .btn-primary:hover { background: var(--blue); transform: translateY(-1px); }
 .btn-secondary {
   display: inline-block; padding: 10px 20px;
   background: #fff; color: var(--primary); border: 2px solid var(--primary);
@@ -215,13 +218,13 @@ img  { max-width: 100%; display: block; }
   border: none; border-radius: 8px; font-weight: 700;
   font-size: .9rem; cursor: pointer; transition: background .2s; white-space: nowrap;
 }
-.filters-search-btn:hover { background: #1b4332; }
+.filters-search-btn:hover { background: var(--blue); }
 .filters-settings-btn {
   padding: 9px 13px; background: var(--bg); color: var(--text);
   border: 1.5px solid var(--border); border-radius: 8px;
   font-size: 1.1rem; cursor: pointer; transition: background .2s; line-height: 1;
 }
-.filters-settings-btn:hover { background: var(--blue-pale); }
+.filters-settings-btn:hover { background: #e9ecef; }
 
 /* ── MUNICIPALITY OVERVIEW CARDS (uploaded design style) ─────── */
 .muni-overview-grid {
@@ -239,7 +242,7 @@ img  { max-width: 100%; display: block; }
 .muni-overview-card:hover {
   transform: translateY(-4px);
   box-shadow: 0 10px 32px rgba(0,0,0,.13);
-  border-color: var(--blue-light);
+  border-color: var(--primary);
 }
 
 /* Cover photo */
@@ -332,8 +335,8 @@ img  { max-width: 100%; display: block; }
   background: var(--primary-pale); color: var(--primary); transition: background .15s;
   text-decoration: none;
 }
-.muni-tab:hover  { background: #b7dfc0; }
-.muni-tab.active { background: var(--blue); color: #fff; }
+.muni-tab:hover  { background: var(--blue-light); }
+.muni-tab.active { background: var(--primary); color: #fff; }
 
 /* ── Cards grid ───────────────────────────────────────────────── */
 .cards-grid {
@@ -528,3 +531,150 @@ tr:hover td { background: #f9fdf9; }
 
 @keyframes fadeIn { from { opacity:0; transform: translateY(-6px); } to { opacity:1; transform: translateY(0); } }
 .fade-in { animation: fadeIn .3s ease; }
+
+/* ── Dark Mode ────────────────────────────────────────────────── */
+body.dark-mode {
+  --bg:           #0f1117;
+  --card-bg:      #1a1d27;
+  --text:         #e2e8f0;
+  --text-muted:   #8892a4;
+  --border:       #2d3348;
+  --shadow:       0 4px 20px rgba(0,0,0,.4);
+  --primary:      #4a8fd4;
+  --primary-light:#5a9fe4;
+  --primary-pale: #1e2d42;
+  --blue:         #6db6d4;
+  --blue-pale:    #1e2d42;
+  --blue-light:   #2a4a5a;
+  --secondary:         #f6d860;
+  --secondary-dark:    #e4c240;
+  --red:          #fc5c65;
+  --green:        #38d39f;
+  --green-pale:   rgba(56,211,159,.1);
+}
+
+body.dark-mode {
+  background: var(--bg);
+  color: var(--text);
+}
+
+/* Nav */
+body.dark-mode .main-nav {
+  background: #111420;
+  box-shadow: 0 2px 12px rgba(0,0,0,.5);
+}
+body.dark-mode .nav-search {
+  background: rgba(255,255,255,.08);
+}
+
+/* Dropdown */
+body.dark-mode .nav-dropdown {
+  background: var(--card-bg);
+  border-color: var(--border);
+  box-shadow: 0 8px 40px rgba(0,0,0,.5);
+}
+body.dark-mode .nav-dropdown::before {
+  background: var(--card-bg);
+  border-color: var(--border);
+}
+body.dark-mode .dropdown-user strong { color: var(--text); }
+body.dark-mode .dropdown-item        { color: var(--text); }
+body.dark-mode .dropdown-item:hover  { background: var(--primary-pale); }
+
+/* Cards & panels */
+body.dark-mode .card,
+body.dark-mode .stat-card,
+body.dark-mode .table-card,
+body.dark-mode .report-section,
+body.dark-mode .detail-content,
+body.dark-mode .review-form,
+body.dark-mode .profile-card,
+body.dark-mode .settings-panel,
+body.dark-mode .settings-sidebar,
+body.dark-mode .auth-card,
+body.dark-mode .login-form,
+body.dark-mode .meta-item,
+body.dark-mode .notification {
+  background: var(--card-bg);
+  border-color: var(--border);
+}
+
+/* Inputs */
+body.dark-mode input,
+body.dark-mode select,
+body.dark-mode textarea,
+body.dark-mode .input-group input,
+body.dark-mode .input-group select,
+body.dark-mode .input-group textarea,
+body.dark-mode .otp-inputs input {
+  background: #0d1018;
+  color: var(--text);
+  border-color: var(--border);
+}
+body.dark-mode input::placeholder { color: var(--text-muted); }
+body.dark-mode .input-group input:focus,
+body.dark-mode .input-group select:focus,
+body.dark-mode .input-group textarea:focus { border-color: var(--primary); }
+
+/* Tables */
+body.dark-mode th         { background: var(--primary-pale); color: var(--primary); }
+body.dark-mode td         { border-color: var(--border); color: var(--text); }
+body.dark-mode tr:hover td{ background: #1e2230; }
+
+/* Settings toggles */
+body.dark-mode .toggle-row  { border-color: var(--border); }
+body.dark-mode .toggle-slider { background: #3a3f52; }
+body.dark-mode .toggle input:checked + .toggle-slider { background: var(--primary); }
+
+/* Settings sidebar active link */
+body.dark-mode .settings-sidebar li a { color: var(--text); }
+body.dark-mode .settings-sidebar li a:hover,
+body.dark-mode .settings-sidebar li a.active {
+  background: var(--primary-pale);
+  color: var(--primary);
+}
+
+/* Buttons in dark mode */
+body.dark-mode .btn-primary:hover,
+body.dark-mode .login-btn:hover { background: var(--blue); }
+body.dark-mode .filters-search-btn:hover { background: var(--blue); }
+body.dark-mode .filters-settings-btn:hover { background: #2a3340; }
+
+/* Tabs and badges in dark mode */
+body.dark-mode .muni-tab { background: var(--primary-pale); color: var(--primary); }
+body.dark-mode .muni-tab:hover { background: var(--blue-light); }
+body.dark-mode .muni-tab.active { background: var(--primary); color: #fff; }
+
+/* Review cards */
+body.dark-mode .review-card { background: #12151e; }
+
+/* Bar chart */
+body.dark-mode .bar-track  { background: var(--primary-pale); }
+body.dark-mode .bar-label  { color: var(--text); }
+
+/* Hero section */
+body.dark-mode .hero-section {
+  background: linear-gradient(135deg, #0d1117 0%, #1a2744 100%);
+}
+
+/* Notification */
+body.dark-mode .notification.success { background: rgba(56,211,159,.12); border-color: var(--green); color: var(--green); }
+body.dark-mode .notification.error   { background: rgba(252,92,101,.12); border-color: var(--red); color: var(--red); }
+body.dark-mode .notification.warning { background: rgba(246,216,96,.1); border-color: var(--secondary); color: var(--secondary); }
+
+/* Badges */
+body.dark-mode .badge-positive { background: rgba(56,211,159,.15); color: #38d39f; }
+body.dark-mode .badge-negative { background: rgba(252,92,101,.15); color: #fc5c65; }
+body.dark-mode .badge-neutral  { background: #2a2d3a; color: var(--text-muted); }
+
+/* Footer */
+body.dark-mode .footer { border-color: var(--border); color: var(--text-muted); }
+
+/* Links */
+body.dark-mode a { color: var(--primary); }
+
+/* Scrollbar (Webkit) */
+body.dark-mode ::-webkit-scrollbar       { width: 8px; }
+body.dark-mode ::-webkit-scrollbar-track  { background: #0f1117; }
+body.dark-mode ::-webkit-scrollbar-thumb  { background: #2d3348; border-radius: 4px; }
+body.dark-mode ::-webkit-scrollbar-thumb:hover { background: #3d4560; }

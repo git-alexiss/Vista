@@ -59,7 +59,7 @@ $editId = (int)($_GET['edit']??0);
     .btn-edit   { background:var(--green-pale);color:var(--green);border:none;padding:6px 14px;border-radius:8px;cursor:pointer;font-size:.8rem;font-weight:600; }
   </style>
 </head>
-<body>
+<body<?= darkModeAttr() ?>>
 <?= renderNav() ?>
 <main class="container">
   <h1 style="font-size:1.6rem;margin-bottom:20px;">My Profile</h1>

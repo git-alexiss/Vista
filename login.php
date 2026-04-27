@@ -108,7 +108,7 @@ if ($_SERVER['REQUEST_METHOD']==='POST' && ($_POST['action']??'')==='login') {
                border-radius:20px;padding:3px 10px;font-size:.72rem;font-weight:600}
   </style>
 </head>
-<body>
+<body<?= darkModeAttr() ?>>
 <div class="login-container">
   <div class="login-form">
     <div class="logo-section">

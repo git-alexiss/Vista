@@ -5,13 +5,13 @@ checkSessionTimeout();
 $recommended = getRecommendations($_SESSION['recently_viewed']??[]);
 ?>
 <!DOCTYPE html>
-<html lang="en"<?= darkModeAttr() ?>>
+<html lang="en">
 <head>
   <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
   <title>Recommended – VISTA-Rizal</title>
   <link rel="stylesheet" href="CSS\style.css">
 </head>
-<body>
+<body<?= darkModeAttr() ?>>
 <?= renderNav('recommended') ?>
 <main class="container">
   <div class="hero-section fade-in">
@@ -46,5 +46,13 @@ $recommended = getRecommendations($_SESSION['recently_viewed']??[]);
     </div>
   <?php endif; ?>
 </main>
+<div class="footer">Tourist Satisfaction Prediction System · Province of Rizal</div>
+<script>
+window.addEventListener('DOMContentLoaded', function() {
+  if (document.body.classList.contains('dark-mode')) {
+    document.body.style.opacity = '1';
+  }
+});
+</script>
 </body>
 </html>

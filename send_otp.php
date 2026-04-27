@@ -41,7 +41,7 @@ function sendOTPEmail(string $toEmail, string $toName, string $otp): array
     .footer{background:#f9fafb;padding:18px 32px;text-align:center;font-size:12px;color:#aaa}
   </style>
 </head>
-<body>
+<body<?= darkModeAttr() ?>>
   <div class="wrapper">
     <div class="header">
       <h1>VISTA<span style="color:#f6e05e">Rizal</span></h1>

@@ -114,7 +114,7 @@ $expiresIn = isset($_SESSION['otp']['expires']) ? max(0, $_SESSION['otp']['expir
     .footer-note{margin-top:28px;font-size:.75rem;color:var(--text-muted,#aaa)}
   </style>
 </head>
-<body>
+<body<?= darkModeAttr() ?>>
 <div class="otp-container">
   <div class="otp-card">
     <div class="otp-logo">VISTA<span>Rizal</span></div>

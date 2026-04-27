@@ -90,7 +90,7 @@ $muniAttractions = ($selectedMuni && isset($municipalities[$selectedMuni]))
     @media(max-width:480px){ .muni-grid{grid-template-columns:1fr;} }
   </style>
 </head>
-<body>
+<body<?= darkModeAttr() ?>>
 <?= renderNav('dashboard') ?>
 <main class="container">
 
@@ -213,8 +213,8 @@ $muniAttractions = ($selectedMuni && isset($municipalities[$selectedMuni]))
             <td><?= htmlspecialchars($r['user']) ?></td>
             <td><?= str_repeat('★',$r['rating']) ?></td>
             <td><span class="badge badge-<?= $r['sentiment'] ?>"><?= ucfirst($r['sentiment']) ?></span></td>
-            <td style="max-width:180px;"><?= htmlspecialchars($r['text']) ?></td>
-            <td><?= htmlspecialchars($r['date']) ?></td>
+            <td style="max-width:180px;"><?= htmlspecialchars($r['review_text']) ?></td>
+            <td><?= htmlspecialchars($r['created_at']) ?></td>
           </tr>
         <?php endforeach; ?>
       </tbody>

@@ -1,9 +1,10 @@
+<?php include 'config.php'; ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <meta charset="UTF-8\"><meta name=\"viewport\" content=\"width=device-width,initial-scale=1.0\">
   <title>Terms & Consent – VISTA-Rizal</title>
-  <link rel="stylesheet" href="CSS\style.css">
+  <link rel=\"stylesheet\" href=\"CSS\\style.css\">
   <style>
     .terms-container { max-width: 720px; margin: 0 auto; padding: 40px 20px; }
     .terms-container h1 { color: var(--primary); margin-bottom: 8px; }
@@ -13,7 +14,7 @@
     .terms-container section { background: var(--card-bg); border-radius: var(--radius); padding: 24px; box-shadow: var(--shadow); margin-bottom: 16px; }
   </style>
 </head>
-<body style="background:var(--bg);">
+<body<?= darkModeAttr() ?>>
 <div class="terms-container">
   <h1>Terms &amp; Consent</h1>
   <p style="color:var(--text-muted);margin-bottom:24px;">VISTA-Rizal · Tourist Satisfaction Prediction System · Province of Rizal</p>

@@ -33,7 +33,7 @@ $reviews   = getReviews($id);
 $avgRating = getAttractionRating($id);
 ?>
 <!DOCTYPE html>
-<html lang="en"<?= darkModeAttr() ?>>
+<html lang="en">
 <head>
   <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
   <title><?= htmlspecialchars($a['name']) ?> – VISTA-Rizal</title>
@@ -60,7 +60,7 @@ $avgRating = getAttractionRating($id);
     .star-empty   { color:#ddd;    font-size:1.1rem; }
   </style>
 </head>
-<body>
+<body<?= darkModeAttr() ?>>
 <?= renderNav('attractions') ?>
 <main class="container">
 
@@ -191,6 +191,13 @@ if (checked) {
   ratingText.style.color = 'var(--green)';
   ratingText.style.fontWeight = '600';
 }
+
+// Dark mode initialization
+window.addEventListener('DOMContentLoaded', function() {
+  if (document.body.classList.contains('dark-mode')) {
+    document.body.style.opacity = '1';
+  }
+});
 </script>
 </body>
 </html>

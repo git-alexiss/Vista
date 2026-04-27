@@ -230,14 +230,11 @@ usort($filteredMunis, fn($a,$b) => $sortBy === 'satisfaction'
 </main>
 <div class="footer">Tourist Satisfaction Prediction System · Province of Rizal</div>
 <script>
-<<<<<<< Updated upstream
-window.addEventListener('DOMContentLoaded', function() {
-  if (document.body.classList.contains('dark-mode')) {
-    document.body.style.opacity = '1';
-  }
-});
-=======
   document.addEventListener('DOMContentLoaded', function() {
+    if (document.body.classList.contains('dark-mode')) {
+      document.body.style.opacity = '1';
+    }
+
     const statusEl = document.getElementById('prediction-status');
     const listEl = document.getElementById('prediction-list');
     const apiUrl = 'http://localhost:5000/municipalities';
@@ -277,7 +274,6 @@ window.addEventListener('DOMContentLoaded', function() {
 
     loadPredictions();
   });
->>>>>>> Stashed changes
 </script>
 </body>
 </html>

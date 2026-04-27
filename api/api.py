@@ -1,4 +1,7 @@
-from .model import MODEL_PATH, load_model_artifact, predict_from_artifact
+try:
+    from .model import MODEL_PATH, load_model_artifact, predict_from_artifact
+except ImportError:
+    from model import MODEL_PATH, load_model_artifact, predict_from_artifact
 
 _artifact = None
 

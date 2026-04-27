@@ -89,6 +89,15 @@ usort($filteredMunis, fn($a,$b) => $sortBy === 'satisfaction'
     <?php endif; ?>
   </section>
 
+  <section class="prediction-section" style="margin-bottom:36px;">
+    <div class="section-header">
+      <h2>Predicted Top Municipalities</h2>
+      <p style="font-size:.94rem;color:var(--text-muted);margin:0;">Ranked by average rating and satisfaction from tourist_insights_processed.csv.</p>
+    </div>
+    <div id="prediction-status" style="padding:20px;line-height:1.6;">Loading municipality rankings...</div>
+    <div id="prediction-list" class="cards-grid" style="display:none; margin-top:16px;"></div>
+  </section>
+
   <form method="GET" action="index.php" class="filters-bar">
     <input type="text" name="q" placeholder="Search attractions or municipalities…"
            value="<?= htmlspecialchars($searchQ) ?>">
@@ -221,11 +230,54 @@ usort($filteredMunis, fn($a,$b) => $sortBy === 'satisfaction'
 </main>
 <div class="footer">Tourist Satisfaction Prediction System · Province of Rizal</div>
 <script>
+<<<<<<< Updated upstream
 window.addEventListener('DOMContentLoaded', function() {
   if (document.body.classList.contains('dark-mode')) {
     document.body.style.opacity = '1';
   }
 });
+=======
+  document.addEventListener('DOMContentLoaded', function() {
+    const statusEl = document.getElementById('prediction-status');
+    const listEl = document.getElementById('prediction-list');
+    const apiUrl = 'http://localhost:5000/municipalities';
+
+    async function loadPredictions() {
+      statusEl.textContent = 'Loading municipality predictions...';
+      listEl.style.display = 'none';
+
+      try {
+        const response = await fetch(apiUrl);
+        if (!response.ok) {
+          throw new Error('API request failed with status ' + response.status);
+        }
+        const municipalities = await response.json();
+        if (!Array.isArray(municipalities) || municipalities.length === 0) {
+          statusEl.textContent = 'No municipality ranking data available.';
+          return;
+        }
+
+        statusEl.style.display = 'none';
+        listEl.style.display = 'grid';
+        listEl.innerHTML = municipalities.map(m => `
+          <div class="card" style="min-width:220px;">
+            <div class="card-content">
+              <h3 style="margin:.2rem 0;">#${m.rank} ${m.Location}</h3>
+              <p style="margin:.2rem 0;">Average Rating: <strong>${m.average_rating}</strong></p>
+              <p style="margin:.2rem 0;">Reviews: <strong>${m.total_reviews}</strong></p>
+              <p style="margin:.2rem 0;">Satisfaction: <strong>${(m.satisfied_pct * 100).toFixed(1)}%</strong></p>
+            </div>
+          </div>
+        `).join('');
+      } catch (error) {
+        statusEl.textContent = 'Unable to load municipality predictions. Make sure the prediction API is running on port 5000.';
+        console.error(error);
+      }
+    }
+
+    loadPredictions();
+  });
+>>>>>>> Stashed changes
 </script>
 </body>
 </html>

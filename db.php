@@ -7,8 +7,8 @@
 define('DB_HOST', 'localhost');
 define('DB_NAME', 'vista_rizal_new');   // ← sole database
 define('DB_USER', 'root');
-define('DB_PASS', '');                  // XAMPP default — change if you set a password
-define('DB_PORT', 3307);
+define('DB_PASS', '');   // XAMPP default — change if you set a password
+define('DB_PORT', 3308);
 
 // ─── PDO Singleton ────────────────────────────────────────────────────────────
 function getDB(): PDO {

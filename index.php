@@ -16,7 +16,7 @@ $municipalities = [];
 foreach ($all as $a) {
     $m = $a['municipality'];
     if (!isset($municipalities[$m])) {
-        $municipalities[$m] = ['name'=>$m,'attractions'=>[],'categories'=>[],'cover'=>$a['image']];
+        $municipalities[$m] = ['name'=>$m,'attractions'=>[],'categories'=>[],'cover'=>getMunicipalityImage($m)];
     }
     $municipalities[$m]['attractions'][] = $a;
     $municipalities[$m]['categories'][]  = $a['category'];
@@ -107,7 +107,7 @@ usort($filteredMunis, fn($a,$b) => $sortBy === 'satisfaction'
 
   <section style="margin-bottom:36px;">
     <div class="section-header">
-      <h2>🗺 Explore Municipalities</h2>
+      <h2>Explore Municipalities</h2>
       <?php if($searchQ||$filterCat!=='all'): ?>
         <a href="index.php" style="font-size:.85rem;color:var(--text-muted);">✕ Clear filters</a>
       <?php endif; ?>
@@ -127,8 +127,7 @@ usort($filteredMunis, fn($a,$b) => $sortBy === 'satisfaction'
         ?>
           <a class="muni-overview-card" href="municipality.php?name=<?= urlencode($mData['name']) ?>">
             <div class="moc-cover">
-              <img src="<?= htmlspecialchars($mData['cover']) ?>" alt="<?= htmlspecialchars($mData['name']) ?>"
-                   onerror="this.src='images/placeholder.jpg'">
+              <img src="<?= htmlspecialchars(getMunicipalityImage($mData['name'])) ?>" onerror="this.src='images/placeholder.jpg'">
               <div class="moc-cover-overlay"></div>
               <div class="moc-cover-title"><?= htmlspecialchars($mData['name']) ?></div>
             </div>
@@ -174,8 +173,8 @@ usort($filteredMunis, fn($a,$b) => $sortBy === 'satisfaction'
         $rating = getAttractionRating($a['id']);
       ?>
         <div class="card">
-          <img src="<?= htmlspecialchars($a['image']) ?>" alt="<?= htmlspecialchars($a['name']) ?>"
-               onerror="this.src='images/placeholder.jpg'">
+          <img src="<?= htmlspecialchars(getAttractionImage($a['name'])) ?>" alt="<?= htmlspecialchars($a['name']) ?>"
+            onerror="this.src='images/placeholder.jpg'">
           <div class="card-content">
             <span class="category-badge category-<?= $a['category'] ?>"><?= ucfirst($a['category']) ?></span>
             <h3><?= htmlspecialchars($a['name']) ?></h3>
@@ -202,8 +201,8 @@ usort($filteredMunis, fn($a,$b) => $sortBy === 'satisfaction'
           $rating = getAttractionRating($a['id']);
         ?>
           <div class="card">
-            <img src="<?= htmlspecialchars($a['image']) ?>" alt="<?= htmlspecialchars($a['name']) ?>"
-                 onerror="this.src='images/placeholder.jpg'">
+            <img src="<?= htmlspecialchars(getAttractionImage($a['name'])) ?>" alt="<?= htmlspecialchars($a['name']) ?>"
+              onerror="this.src='images/placeholder.jpg'">
             <div class="card-content">
               <span class="category-badge category-<?= $a['category'] ?>"><?= ucfirst($a['category']) ?></span>
               <h3><?= htmlspecialchars($a['name']) ?></h3>

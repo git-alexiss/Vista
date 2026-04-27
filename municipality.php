@@ -16,7 +16,7 @@ foreach($attractions as $a) {
 }
 $avgRating  = $allRatings ? round(array_sum($allRatings)/count($allRatings),1) : null;
 $categories = array_unique(array_column($attractions,'category'));
-$cover      = $attractions[0]['image'];
+$cover = getMunicipalityImage($muniName);
 
 $filterCat  = $_GET['cat'] ?? 'all';
 $displayed  = $filterCat === 'all' ? $attractions
@@ -82,8 +82,8 @@ $displayed  = $filterCat === 'all' ? $attractions
         $rating = getAttractionRating($a['id']);
       ?>
         <div class="card">
-          <img src="<?= htmlspecialchars($a['image']) ?>" alt="<?= htmlspecialchars($a['name']) ?>"
-               onerror="this.src='images/placeholder.jpg'">
+          <img src="<?= htmlspecialchars(getAttractionImage($a['name'])) ?>" alt="<?= htmlspecialchars($a['name']) ?>"
+            onerror="this.src='images/placeholder.jpg'">
           <div class="card-content">
             <span class="category-badge category-<?= $a['category'] ?>"><?= ucfirst($a['category']) ?></span>
             <h3><?= htmlspecialchars($a['name']) ?></h3>

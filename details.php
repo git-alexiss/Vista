@@ -65,7 +65,7 @@ $avgRating = getAttractionRating($id);
 <main class="container">
 
   <div class="detail-hero">
-    <img src="<?= htmlspecialchars($a['image']) ?>" alt="<?= htmlspecialchars($a['name']) ?>" onerror="this.src='images/placeholder.jpg'">
+    <img src="<?= htmlspecialchars(getAttractionImage($a['name'])) ?>" alt="<?= htmlspecialchars($a['name']) ?>" onerror="this.src='images/placeholder.jpg'">
     <div class="detail-hero-overlay">
       <span class="category-badge category-<?= $a['category'] ?>"><?= ucfirst($a['category']) ?></span>
       <h1><?= htmlspecialchars($a['name']) ?></h1>

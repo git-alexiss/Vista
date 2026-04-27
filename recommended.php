@@ -30,7 +30,7 @@ $recommended = getRecommendations($_SESSION['recently_viewed']??[]);
         $rating = getAttractionRating($a['id']);
       ?>
         <div class="card">
-          <img src="<?= htmlspecialchars($a['image']) ?>" alt="<?= htmlspecialchars($a['name']) ?>" onerror="this.src='images/placeholder.jpg'">
+          <img src="<?= htmlspecialchars(getAttractionImage($a['name'])) ?>" alt="<?= htmlspecialchars($a['name']) ?>" onerror="this.src='images/placeholder.jpg'">
           <div class="card-content">
             <span class="category-badge category-<?= $a['category'] ?>"><?= ucfirst($a['category']) ?></span>
             <h3><?= htmlspecialchars($a['name']) ?></h3>

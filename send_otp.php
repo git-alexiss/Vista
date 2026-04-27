@@ -1,6 +1,6 @@
 <?php
 // ─── BREVO CONFIG ─────────────────────────────────────────────────────────────
-define('BREVO_API_KEY', 'ckrett');;
+define('BREVO_API_KEY', 'ckret sha');
 define('BREVO_FROM_EMAIL', 'alexisojascastro95@gmail.com');
 define('BREVO_FROM_NAME', 'Vista Rizal');
 

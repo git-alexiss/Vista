@@ -32,7 +32,7 @@ $popular = getPopularAttractions();
     ?>
       <div class="card">
         <div style="position:relative;">
-          <img src="<?= htmlspecialchars($a['image']) ?>" alt="<?= htmlspecialchars($a['name']) ?>" onerror="this.src='images/placeholder.jpg'">
+          <img src="<?= htmlspecialchars(getAttractionImage($a['name'])) ?>" alt="<?= htmlspecialchars($a['name']) ?>" onerror="this.src='images/placeholder.jpg'">
           <span style="position:absolute;top:10px;left:10px;background:var(--gold);color:var(--green);font-weight:900;border-radius:50%;width:32px;height:32px;display:flex;align-items:center;justify-content:center;font-size:.85rem;"><?= $i+1 ?></span>
         </div>
         <div class="card-content">

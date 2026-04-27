@@ -38,6 +38,76 @@ foreach ($municipalities as $m => $d) {
 }
 ksort($municipalities);
 
+function loadMunicipalityRankingsFromCsv(string $csvPath): array {
+    if (!is_readable($csvPath)) {
+        return [];
+    }
+
+    $handle = fopen($csvPath, 'r');
+    if ($handle === false) {
+        return [];
+    }
+
+    $headers = fgetcsv($handle);
+    if (!is_array($headers)) {
+        fclose($handle);
+        return [];
+    }
+
+    $stats = [];
+    while (($row = fgetcsv($handle)) !== false) {
+        $row = array_combine($headers, $row);
+        if ($row === false) {
+            continue;
+        }
+
+        $location = trim($row['Location'] ?? '');
+        $ratings  = is_numeric($row['Ratings'] ?? null) ? (float)$row['Ratings'] : null;
+        $label    = strtolower(trim((string)($row['Satisfaction_Label'] ?? '')));
+        $satisfied = $label === '1' || $label === 'satisfied' || $label === 'true';
+
+        if ($location === '' || $ratings === null) {
+            continue;
+        }
+
+        if (!isset($stats[$location])) {
+            $stats[$location] = ['count' => 0, 'sum' => 0.0, 'satisfied' => 0];
+        }
+        $stats[$location]['count'] += 1;
+        $stats[$location]['sum']   += $ratings;
+        $stats[$location]['satisfied'] += $satisfied ? 1 : 0;
+    }
+    fclose($handle);
+
+    $rankings = [];
+    foreach ($stats as $location => $data) {
+        if ($data['count'] === 0) {
+            continue;
+        }
+        $rankings[] = [
+            'Location'       => $location,
+            'average_rating' => round($data['sum'] / $data['count'], 3),
+            'total_reviews'  => $data['count'],
+            'satisfied_pct'  => round($data['satisfied'] / $data['count'], 3),
+        ];
+    }
+
+    usort($rankings, function($a, $b) {
+        if ($b['average_rating'] <=> $a['average_rating']) {
+            return $b['average_rating'] <=> $a['average_rating'];
+        }
+        return $b['total_reviews'] <=> $a['total_reviews'];
+    });
+
+    foreach ($rankings as $index => &$entry) {
+        $entry['rank'] = $index + 1;
+    }
+    return $rankings;
+}
+
+$predictionCsv = __DIR__ . '/api/tourist_insights_processed.csv';
+$predictions   = loadMunicipalityRankingsFromCsv($predictionCsv);
+
 $searchQ   = trim($_GET['q']   ?? '');
 $filterCat = trim($_GET['cat'] ?? $defaultCat);
 $sortBy    = trim($_GET['sort'] ?? 'rating');
@@ -94,8 +164,24 @@ usort($filteredMunis, fn($a,$b) => $sortBy === 'satisfaction'
       <h2>Predicted Top Municipalities</h2>
       <p style="font-size:.94rem;color:var(--text-muted);margin:0;">Ranked by average rating and satisfaction from tourist_insights_processed.csv.</p>
     </div>
-    <div id="prediction-status" style="padding:20px;line-height:1.6;">Loading municipality rankings...</div>
-    <div id="prediction-list" class="cards-grid" style="display:none; margin-top:16px;"></div>
+    <?php if (empty($predictions)): ?>
+      <div style="padding:20px;line-height:1.6;color:var(--text-muted);">
+        Unable to load municipality rankings from the CSV dataset. Please ensure <code>api/tourist_insights_processed.csv</code> exists.
+      </div>
+    <?php else: ?>
+      <div class="cards-grid" style="margin-top:16px;">
+        <?php foreach (array_slice($predictions, 0, 6) as $m): ?>
+          <div class="card" style="min-width:220px;">
+            <div class="card-content">
+              <h3 style="margin:.2rem 0;">#<?= htmlspecialchars($m['rank']) ?> <?= htmlspecialchars($m['Location']) ?></h3>
+              <p style="margin:.2rem 0;">Average Rating: <strong><?= htmlspecialchars($m['average_rating']) ?></strong></p>
+              <p style="margin:.2rem 0;">Reviews: <strong><?= htmlspecialchars($m['total_reviews']) ?></strong></p>
+              <p style="margin:.2rem 0;">Satisfaction: <strong><?= htmlspecialchars(round($m['satisfied_pct'] * 100, 1)) ?>%</strong></p>
+            </div>
+          </div>
+        <?php endforeach; ?>
+      </div>
+    <?php endif; ?>
   </section>
 
   <form method="GET" action="index.php" class="filters-bar">
@@ -234,45 +320,6 @@ usort($filteredMunis, fn($a,$b) => $sortBy === 'satisfaction'
     if (document.body.classList.contains('dark-mode')) {
       document.body.style.opacity = '1';
     }
-
-    const statusEl = document.getElementById('prediction-status');
-    const listEl = document.getElementById('prediction-list');
-    const apiUrl = 'http://localhost:5000/municipalities';
-
-    async function loadPredictions() {
-      statusEl.textContent = 'Loading municipality predictions...';
-      listEl.style.display = 'none';
-
-      try {
-        const response = await fetch(apiUrl);
-        if (!response.ok) {
-          throw new Error('API request failed with status ' + response.status);
-        }
-        const municipalities = await response.json();
-        if (!Array.isArray(municipalities) || municipalities.length === 0) {
-          statusEl.textContent = 'No municipality ranking data available.';
-          return;
-        }
-
-        statusEl.style.display = 'none';
-        listEl.style.display = 'grid';
-        listEl.innerHTML = municipalities.map(m => `
-          <div class="card" style="min-width:220px;">
-            <div class="card-content">
-              <h3 style="margin:.2rem 0;">#${m.rank} ${m.Location}</h3>
-              <p style="margin:.2rem 0;">Average Rating: <strong>${m.average_rating}</strong></p>
-              <p style="margin:.2rem 0;">Reviews: <strong>${m.total_reviews}</strong></p>
-              <p style="margin:.2rem 0;">Satisfaction: <strong>${(m.satisfied_pct * 100).toFixed(1)}%</strong></p>
-            </div>
-          </div>
-        `).join('');
-      } catch (error) {
-        statusEl.textContent = 'Unable to load municipality predictions. Make sure the prediction API is running on port 5000.';
-        console.error(error);
-      }
-    }
-
-    loadPredictions();
   });
 </script>
 </body>

@@ -84,7 +84,7 @@ $isDark = !empty($s['dark_mode']);
 <head>
   <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
   <title>Settings – VISTA-Rizal</title>
-  <link rel="stylesheet" href="/Vista/style.css">
+  <link rel="stylesheet" href="CSS\style.css">
 </head>
 <body<?= darkModeAttr() ?>>
 <?= renderNav('') ?>

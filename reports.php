@@ -20,7 +20,11 @@ foreach($reviews as $r) {
 }
 
 // Sentiment
-$sentiments = array_count_values(array_column($reviews,'sentiment'));
+$sentiments = ['positive' => 0, 'neutral' => 0, 'negative' => 0];
+foreach ($reviews as $r) {
+  $sentiment = $r['rating'] >= 4 ? 'positive' : ($r['rating'] >= 3 ? 'neutral' : 'negative');
+  $sentiments[$sentiment]++;
+}
 $total      = count($reviews);
 
 // Municipalities
@@ -141,12 +145,13 @@ $maxInsightRating    = 5;
 
       <h4 style="margin:20px 0 12px;">Sentiment per Attraction</h4>
       <table>
-        <thead><tr><th>Attraction</th><th>😊 Positive</th><th>😐 Neutral</th><th>😞 Negative</th><th>Avg Rating</th></tr></thead>
+        <thead><tr><th>Attraction</th><th>Positive</th><th>Neutral</th><th>Negative</th><th>Avg Rating</th></tr></thead>
         <tbody>
           <?php
           $attrSentiment = [];
           foreach($reviews as $r) {
-              $attrSentiment[$r['attraction_id']][$r['sentiment']][] = $r['rating'];
+              $sentiment = $r['rating'] >= 4 ? 'positive' : ($r['rating'] >= 3 ? 'neutral' : 'negative');
+              $attrSentiment[$r['attraction_id']][$sentiment][] = $r['rating'];
           }
           foreach($all as $a):
             $data = $attrSentiment[$a['id']]??[];

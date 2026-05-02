@@ -1,4 +1,4 @@
-Fix it Flask>=2.0
+Flask>=2.0
 pandas>=2.0
 numpy>=1.24
 scikit-learn>=1.2

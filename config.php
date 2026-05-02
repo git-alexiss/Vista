@@ -36,7 +36,7 @@ define('FACEBOOK_APP_ID',      'paste-your-facebook-app-id');
 define('FACEBOOK_APP_SECRET',  'paste-your-facebook-app-secret');
 define('FACEBOOK_REDIRECT_URI', BASE_URL . 'facebook_callback.php');
 
-define('RENDER_API_BASE_URL', 'https://your-render-service.onrender.com');
+define('RENDER_API_BASE_URL', 'https://vista-rizal.onrender.com');
 
 function callRenderApi(string $path, array $payload = []): array|false {
     $url = rtrim(RENDER_API_BASE_URL, '/') . '/' . ltrim($path, '/');

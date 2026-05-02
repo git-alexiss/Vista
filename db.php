@@ -4,11 +4,24 @@
 //  Single database: vista_rizal_new
 // ─────────────────────────────────────────────────────────────────────────────
 
-define('DB_HOST', 'sql307.infinityfree.com');
-define('DB_NAME', 'if0_41810035_vista_rizal_new');
-define('DB_USER', 'if0_41810035');
-define('DB_PASS', 'MAYeleven23');
-define('DB_PORT', 3307);
+if (!defined('DB_HOST')) {
+    $serverName = $_SERVER['HTTP_HOST'] ?? 'localhost';
+    $isLocal = preg_match('/^(localhost|127\.0\.0\.1)(:\d+)?$/i', $serverName);
+
+    if ($isLocal) {
+        define('DB_HOST', 'localhost');
+        define('DB_NAME', 'vista_rizal_new');
+        define('DB_USER', 'root');
+        define('DB_PASS', '');
+        define('DB_PORT', 3307);
+    } else {
+        define('DB_HOST', 'sql307.infinityfree.com');
+        define('DB_NAME', 'if0_41810035_vista_rizal_new');
+        define('DB_USER', 'if0_41810035');
+        define('DB_PASS', 'MAYeleven23');
+        define('DB_PORT', 3307);
+    }
+}
 
 // ─── PDO Singleton ────────────────────────────────────────────────────────────
 function getDB(): PDO {

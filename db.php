@@ -4,10 +4,10 @@
 //  Single database: vista_rizal_new
 // ─────────────────────────────────────────────────────────────────────────────
 
-define('DB_HOST', 'localhost');
-define('DB_NAME', 'vista_rizal_new');   // ← sole database
-define('DB_USER', 'root');
-define('DB_PASS', '');                  // XAMPP default — change if you set a password
+define('DB_HOST', 'sql307.infinityfree.com');
+define('DB_NAME', 'if0_41810035_vista_rizal_new');
+define('DB_USER', 'if0_41810035');
+define('DB_PASS', 'MAYeleven23');
 define('DB_PORT', 3307);
 
 // ─── PDO Singleton ────────────────────────────────────────────────────────────

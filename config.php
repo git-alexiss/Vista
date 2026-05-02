@@ -36,6 +36,35 @@ define('FACEBOOK_APP_ID',      'paste-your-facebook-app-id');
 define('FACEBOOK_APP_SECRET',  'paste-your-facebook-app-secret');
 define('FACEBOOK_REDIRECT_URI', BASE_URL . 'facebook_callback.php');
 
+define('RENDER_API_BASE_URL', 'https://your-render-service.onrender.com');
+
+function callRenderApi(string $path, array $payload = []): array|false {
+    $url = rtrim(RENDER_API_BASE_URL, '/') . '/' . ltrim($path, '/');
+    $json = json_encode($payload);
+
+    $ch = curl_init($url);
+    curl_setopt_array($ch, [
+        CURLOPT_RETURNTRANSFER => true,
+        CURLOPT_POST => true,
+        CURLOPT_HTTPHEADER => ['Content-Type: application/json'],
+        CURLOPT_POSTFIELDS => $json,
+        CURLOPT_CONNECTTIMEOUT => 5,
+        CURLOPT_TIMEOUT => 15,
+    ]);
+
+    $response = curl_exec($ch);
+    $error = curl_error($ch);
+    $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+    curl_close($ch);
+
+    if ($response === false || $error || $httpCode >= 400) {
+        error_log('Render API request failed: ' . ($error ?: "HTTP $httpCode"));
+        return false;
+    }
+
+    return json_decode($response, true);
+}
+
 // ─── Basic helpers ────────────────────────────────────────────────────────────
 function sanitize($data) {
     return htmlspecialchars(trim($data), ENT_QUOTES, 'UTF-8');

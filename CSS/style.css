@@ -397,7 +397,7 @@ img  { max-width: 100%; display: block; }
   background: linear-gradient(transparent, rgba(0,0,0,.7)); padding: 24px; color: #fff;
 }
 .detail-hero-overlay h1 { font-size: 1.8rem; }
-.detail-meta { display: flex; flex-wrap: wrap; gap: 16px; margin-bottom: 24px; }
+.detail-meta { display: flex; flex-wrap: nowrap; gap: 16px; margin-bottom: 24px; overflow-x: auto; }
 .meta-item { background: var(--card-bg); border-radius: 10px; padding: 14px 18px; flex: 1; min-width: 140px; box-shadow: var(--shadow); }
 .meta-item .meta-label { font-size: .75rem; color: var(--text-muted); font-weight: 600; text-transform: uppercase; letter-spacing: .5px; }
 .meta-item .meta-value { font-size: 1.1rem; font-weight: 700; margin-top: 4px; }

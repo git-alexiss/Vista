@@ -96,7 +96,8 @@ $avgRating = getAttractionRating($id);
     <div class="meta-item">
       <div class="meta-label">Municipality</div>
       <div class="meta-value"> <?= htmlspecialchars($a['municipality']) ?></div>
-   
+    </div>
+  </div>
 
   <div class="detail-content">
     <h2 style="margin-bottom:10px;">About this Place</h2>
@@ -140,7 +141,7 @@ $avgRating = getAttractionRating($id);
 
   <?php if($reviews): ?>
     <div class="detail-content">
-      <h3 style="margin-bottom:16px;">Reviews (<?= count($allReviews) ?>)</h3>
+      <h3 style="margin-bottom:16px;">Reviews (<?= count($reviews) ?>)</h3>
       <?php foreach($reviews as $r): ?>
         <div class="review-card">
           <div class="rev-header">

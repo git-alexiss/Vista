@@ -54,13 +54,12 @@ if ($catFilter && $catFilter!=='all') {
       <div class="cards-grid">
         <?php foreach($results as $a): ?>
           <div class="card">
-            <img src="<?= htmlspecialchars($a['image']) ?>" alt="<?= htmlspecialchars($a['name']) ?>" onerror="this.src='images/placeholder.jpg'">
+            <img src="<?= htmlspecialchars(getAttractionImage($a['name'])) ?>" alt="<?= htmlspecialchars($a['name']) ?>" onerror="this.src='images/placeholder.jpg'">
             <div class="card-content">
               <span class="category-badge category-<?= $a['category'] ?>"><?= ucfirst($a['category']) ?></span>
               <h3><?= htmlspecialchars($a['name']) ?></h3>
               <div class="rating"> <?= $a['rating'] ?>/5</div>
               <span class="location"> <?= htmlspecialchars($a['municipality']) ?></span>
-              <span class="hours"> <?= htmlspecialchars($a['hours']) ?></span>
               <a href="details.php?id=<?= $a['id'] ?>" class="btn-primary btn-sm">View Details</a>
             </div>
           </div>

@@ -15,11 +15,11 @@ if (!defined('DB_HOST')) {
         define('DB_PASS', '');
         define('DB_PORT', 3307);
     } else {
-        define('DB_HOST', 'sql307.infinityfree.com');
+        define('DB_HOST', 'sql307.epizy.com');   // or exact host from panel
         define('DB_NAME', 'if0_41810035_vista_rizal_new');
         define('DB_USER', 'if0_41810035');
         define('DB_PASS', 'MAYeleven23');
-        define('DB_PORT', 3307);
+        define('DB_PORT', 3306);
     }
 }
 
